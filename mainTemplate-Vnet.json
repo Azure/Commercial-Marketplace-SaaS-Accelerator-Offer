@@ -296,6 +296,9 @@
       "type": "Microsoft.Web/sites",
       "apiVersion": "2019-08-01",
       "location": "[variables('location')]",
+      "identity": {
+        "type": "SystemAssigned"
+      },      
       "tags": {
         "displayName": "[variables('ProvisioningServiceAppName')]"
       },
@@ -309,9 +312,6 @@
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
         "httpsOnly": true,
         "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]",
-        "keyVaultReferenceIdentity": "SystemAssigned",
-        "ftpsState": "FtpsOnly",
-
         "siteConfig": {
           "connectionStrings": [
             {
@@ -397,7 +397,10 @@
               "value": "dotnetcore"
             }
           ],
-          "alwaysOn": "[variables('alwaysOn')]"
+          "alwaysOn": "[variables('alwaysOn')]",
+            "ftpsState": "FtpsOnly",
+            "http20Enabled": false,
+            "minTlsVersion": "1.2"
         }
       },
       "resources": [
@@ -424,6 +427,9 @@
       "type": "Microsoft.Web/sites",
       "apiVersion": "2019-08-01",
       "location": "[variables('location')]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
       "tags": {
         "displayName": "[variables('PublisherServiceAppName')]"
       },
@@ -437,9 +443,6 @@
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
         "httpsOnly": true,
         "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]",
-        "keyVaultReferenceIdentity": "SystemAssigned",
-        "ftpsState": "FtpsOnly",
-
         "siteConfig": {
           "connectionStrings": [
             {
@@ -525,7 +528,10 @@
               "value": "dotnetcore"
             }
           ],
-          "alwaysOn": "[variables('alwaysOn')]"
+            "alwaysOn": "[variables('alwaysOn')]",
+            "ftpsState": "FtpsOnly",
+            "http20Enabled": false,
+            "minTlsVersion": "1.2"
         }
       },
       "resources": [
