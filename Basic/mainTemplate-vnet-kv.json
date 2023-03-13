@@ -62,9 +62,9 @@
     "AADAppSetting": "[concat('@Microsoft.KeyVault(VaultName=',variables('kvName'), ';SecretName=', variables('ADApplicationSecretName'),')')]",
     "DefaultConnectionSetting": "[concat('@Microsoft.KeyVault(VaultName=',variables('kvName'), ';SecretName=', variables('DefaultConnectionSecretName'),')')]",
     "DefaultConnectionSecret": "[concat('Data Source=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=AMPSaaSDB', ';User Id=', variables('SQLAdminLogin'), '@', variables('sqlServerName'), '.database.windows.net;Password=', variables('SQLAdminLoginPassword'), ';')]",
-    /* "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSite.zip')]",
+    "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSite.zip')]",
     "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSite.zip')]",
-    "sqlScriptPath": "[uri(deployment().properties.templateLink.uri, 'script.sql')]", */
+    "sqlScriptPath": "[uri(deployment().properties.templateLink.uri, 'script.sql')]",
     "$fxv#0": "cd /mnt/azscripts/azscriptinput\r\nls\r\nInstall-Module sqlserver -Force\r\nInvoke-Sqlcmd -InputFile /mnt/azscripts/azscriptinput/script.sql -ServerInstance ${Env:sqlserverName} -database ${Env:sqlDBName} -Username ${Env:sqlAdminLogin} -Password ${Env:sqlAdminLoginPassword}"
   },
   "resources": [
@@ -189,8 +189,8 @@
       "name": "[variables('sqlServerName')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-      "[resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))]"
-      ],      
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))]"
+      ],
       "properties": {
         "administratorLogin": "[variables('SQLAdminLogin')]",
         "administratorLoginPassword": "[variables('SQLAdminLoginPassword')]",
@@ -223,7 +223,7 @@
         "ignoreMissingVnetServiceEndpoint": false
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"    
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
       ]
     },
     {
@@ -246,7 +246,7 @@
         "zoneRedundant": false
       }
     },
-    /* {
+    {
       "type": "Microsoft.Resources/deploymentScripts",
       "apiVersion": "2020-10-01",
       "name": "createSqlSchema",
@@ -284,7 +284,7 @@
           }
         ]
       }
-    }, */
+    },
     // App service plan and web apps
     {
       "type": "Microsoft.Web/serverfarms",
@@ -313,7 +313,7 @@
       "location": "[variables('location')]",
       "identity": {
         "type": "SystemAssigned"
-      },      
+      },
       "tags": {
         "displayName": "[variables('CustomerPortalAppName')]"
       },
@@ -411,12 +411,11 @@
             }
           ],
           "alwaysOn": "[variables('alwaysOn')]",
-            "ftpsState": "FtpsOnly",
-            "http20Enabled": false,
-            "minTlsVersion": "1.2"
+          "ftpsState": "FtpsOnly",
+          "http20Enabled": false,
+          "minTlsVersion": "1.2"
         }
-      }
-      /* ,
+      },
       "resources": [
         {
           "name": "MSDeploy",
@@ -434,7 +433,7 @@
             "dbType": "None"
           }
         }
-      ] */
+      ]
     },
     {
       "name": "[variables('AdminPortalAppName')]",
@@ -541,13 +540,12 @@
               "value": "dotnetcore"
             }
           ],
-            "alwaysOn": "[variables('alwaysOn')]",
-            "ftpsState": "FtpsOnly",
-            "http20Enabled": false,
-            "minTlsVersion": "1.2"
+          "alwaysOn": "[variables('alwaysOn')]",
+          "ftpsState": "FtpsOnly",
+          "http20Enabled": false,
+          "minTlsVersion": "1.2"
         }
-      }
-      /* ,
+      },
       "resources": [
         {
           "name": "MSDeploy",
@@ -566,7 +564,7 @@
             "dbType": "None"
           }
         }
-      ] */
+      ]
     },
     // Key Vault and Secrets
     {
@@ -590,14 +588,14 @@
             "objectId": "[reference(resourceId('Microsoft.Web/sites', variables('CustomerPortalAppName')), '2018-02-01', 'Full').identity.principalId]",
             "tenantId": "[subscription().tenantId]",
             "permissions": {
-              "secrets": ["list", "get"]
+              "secrets": [ "list", "get" ]
             }
           },
           {
             "objectId": "[reference(resourceId('Microsoft.Web/sites', variables('AdminPortalAppName')), '2018-02-01', 'Full').identity.principalId]",
             "tenantId": "[subscription().tenantId]",
             "permissions": {
-              "secrets": ["list", "get"]
+              "secrets": [ "list", "get" ]
             }
           }
         ],
@@ -610,10 +608,10 @@
           "defaultAction": "Deny",
           "ipRules": [],
           "virtualNetworkRules": [
-              {
-                  "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('networkName'), 'web')]",
-                  "ignoreMissingVnetServiceEndpoint": false
-              }
+            {
+              "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('networkName'), 'web')]",
+              "ignoreMissingVnetServiceEndpoint": false
+            }
           ]
         }
       }
