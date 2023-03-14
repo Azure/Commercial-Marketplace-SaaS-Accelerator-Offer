@@ -404,7 +404,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "[resourceId('Microsoft.Web/serverfarms', variables('customerPortalAppName'))]"
+        "[resourceId('Microsoft.Web/sites', variables('customerPortalAppName'))]"
       ],
       "properties": {
         "name": "[variables('adminPortalAppName')]",
