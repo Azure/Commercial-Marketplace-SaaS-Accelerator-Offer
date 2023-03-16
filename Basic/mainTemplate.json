@@ -138,7 +138,7 @@
         "enableDdosProtection": false
       }
     },
-    //SQL Server and DB
+    // SQL Server and DB
     {
       "type": "Microsoft.Sql/servers",
       "apiVersion": "2015-05-01-preview",
@@ -252,7 +252,7 @@
         "capacity": "1"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('sqlDBName'))]"
+        "[resourceId('Microsoft.Resources/deploymentScripts', 'createSqlSchema')]"
       ],
       "tags": {
         "displayName": "[variables('appServicePlanName')]"
@@ -282,84 +282,8 @@
         "httpsOnly": true,
         "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]",
         "siteConfig": {
-          "connectionStrings": [
-            {
-              "name": "DefaultConnection",
-              "connectionString": "[variables('DefaultConnectionSetting')]"
-            }
-          ],
-          "appSettings": [
-            {
-              "name": "ASPNETCORE_ENVIRONMENT",
-              "value": "Development",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__AdAuthenticationEndPoint",
-              "value": "https://login.microsoftonline.com",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__ClientId",
-              "value": "[parameters('ADApplicationID')]",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__ClientSecret",
-              "value": "[variables('aadAppSetting')]",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__MTClientId",
-              "value": "[parameters('ADMTApplicationID')]",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__FulFillmentAPIBaseURL",
-              "value": "https://marketplaceapi.microsoft.com/api",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__FulFillmentAPIVersion",
-              "value": "2018-08-31",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__GrantType",
-              "value": "client_credentials",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__Resource",
-              "value": "20e940b3-4c77-4b0b-9a53-9e16a1b010a7",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__SaaSAppUrl",
-              "value": "",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__SignedOutRedirectUri",
-              "value": "[concat('https://', variables('customerPortalAppName'), '.azurewebsites.net/Home/Index')]",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__TenantId",
-              "value": "[parameters('TenantID')]",
-              "slotSetting": false
-            },
-            {
-              "name": "KnownUsers",
-              "value": "[parameters('PublisherAdminUsers')]",
-              "slotSetting": false
-            },
-            {
-              "name": "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
-              "value": "1",
-              "slotSetting": false
-            }
-          ],
+          "connectionStrings": [],
+          "appSettings": [],
           "metadata": [
             {
               "name": "CURRENT_STACK",
@@ -371,25 +295,7 @@
           "http20Enabled": false,
           "minTlsVersion": "1.2"
         }
-      },
-      "resources": [
-        {
-          "name": "MSDeploy",
-          "type": "extensions",
-          "apiVersion": "2019-08-01",
-          "location": "[variables('location')]",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('customerPortalAppName'))]"
-          ],
-          "tags": {
-            "displayName": "Web Deploy for Customer Portal"
-          },
-          "properties": {
-            "packageUri": "[variables('customerSitePackagePath')]",
-            "dbType": "None"
-          }
-        }
-      ]
+      }
     },
     {
       "name": "[variables('adminPortalAppName')]",
@@ -412,85 +318,8 @@
         "httpsOnly": true,
         "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]",
         "siteConfig": {
-          "connectionStrings": [
-            {
-              "name": "DefaultConnection",
-              "connectionString": "[variables('defaultConnectionSetting')]"
-
-            }
-          ],
-          "appSettings": [
-            {
-              "name": "ASPNETCORE_ENVIRONMENT",
-              "value": "Development",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__AdAuthenticationEndPoint",
-              "value": "https://login.microsoftonline.com",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__ClientId",
-              "value": "[parameters('ADApplicationID')]",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__ClientSecret",
-              "value": "[variables('aadAppSetting')]",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__MTClientId",
-              "value": "[parameters('ADMTApplicationID')]",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__FulFillmentAPIBaseURL",
-              "value": "https://marketplaceapi.microsoft.com/api",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__FulFillmentAPIVersion",
-              "value": "2018-08-31",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__GrantType",
-              "value": "client_credentials",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__Resource",
-              "value": "20e940b3-4c77-4b0b-9a53-9e16a1b010a7",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__SaaSAppUrl",
-              "value": "",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__SignedOutRedirectUri",
-              "value": "[concat('https://', variables('customerPortalAppName'), '.azurewebsites.net/Home/Index')]",
-              "slotSetting": false
-            },
-            {
-              "name": "SaaSApiConfiguration__TenantId",
-              "value": "[parameters('TenantID')]",
-              "slotSetting": false
-            },
-            {
-              "name": "KnownUsers",
-              "value": "[parameters('PublisherAdminUsers')]",
-              "slotSetting": false
-            },
-            {
-              "name": "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
-              "value": "1",
-              "slotSetting": false
-            }
-          ],
+          "connectionStrings": [],
+          "appSettings": [],
           "metadata": [
             {
               "name": "CURRENT_STACK",
@@ -502,26 +331,7 @@
           "http20Enabled": false,
           "minTlsVersion": "1.2"
         }
-      },
-      "resources": [
-        {
-          "name": "MSDeploy",
-          "type": "extensions",
-          "apiVersion": "2019-08-01",
-          "location": "[variables('location')]",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('adminPortalAppName'))]",
-            "[resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))]"
-          ],
-          "tags": {
-            "displayName": "Web Deploy for Publisher Portal"
-          },
-          "properties": {
-            "packageUri": "[variables('adminSitePackagePath')]",
-            "dbType": "None"
-          }
-        }
-      ]
+      }
     },
     // Key Vault and Secrets
     {
@@ -594,6 +404,88 @@
       "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
       ]
+    },
+    // App configuration
+    {
+      "type": "Microsoft.Web/sites/config",
+      "name": "[concat(variables('customerPortalAppName'), '/appsettings')]",
+      "apiVersion": "2018-11-01",
+      "properties": {
+        "SaaSApiConfiguration__AdAuthenticationEndPoint": "https://login.microsoftonline.com",
+      "SaaSApiConfiguration__TenantId": "[parameters('TenantID')]",
+      "SaaSApiConfiguration__ClientId": "[parameters('ADApplicationID')]",
+      "SaaSApiConfiguration__ClientSecret": "[variables('aadAppSetting')]",
+      "SaaSApiConfiguration__MTClientId": "[parameters('ADMTApplicationID')]",
+      "SaaSApiConfiguration__FulFillmentAPIBaseURL": "https://marketplaceapi.microsoft.com/api",
+      "SaaSApiConfiguration__FulFillmentAPIVersion": "2018-08-31",      
+      "SaaSApiConfiguration__GrantType": "client_credentials",
+      "SaaSApiConfiguration__Resource": "20e940b3-4c77-4b0b-9a53-9e16a1b010a7",
+      "SaaSApiConfiguration__SaaSAppUrl": "",
+      "SaaSApiConfiguration__SignedOutRedirectUri": "[concat('https://', variables('customerPortalAppName'), '.azurewebsites.net/Home/Index')]",
+      "WEBSITE_HTTPLOGGING_RETENTION_DAYS": "1",
+      "WEBSITE_RUN_FROM_PACKAGE": "[variables('customerSitePackagePath')]"
+      },
+      "dependsOn": [ 
+        "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('aadApplicationSecretName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('defaultConnectionSecretName'))]"
+        ]
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "name": "[concat(variables('adminPortalAppName'), '/appsettings')]",
+      "apiVersion": "2018-11-01",
+      "properties": {
+        "SaaSApiConfiguration__AdAuthenticationEndPoint": "https://login.microsoftonline.com",
+        "SaaSApiConfiguration__TenantId": "[parameters('TenantID')]",
+        "SaaSApiConfiguration__ClientId": "[parameters('ADApplicationID')]",
+        "SaaSApiConfiguration__ClientSecret": "[variables('aadAppSetting')]",
+        "SaaSApiConfiguration__MTClientId": "[parameters('ADMTApplicationID')]",
+        "SaaSApiConfiguration__FulFillmentAPIBaseURL": "https://marketplaceapi.microsoft.com/api",
+        "SaaSApiConfiguration__FulFillmentAPIVersion": "2018-08-31",      
+        "SaaSApiConfiguration__GrantType": "client_credentials",
+        "SaaSApiConfiguration__Resource": "20e940b3-4c77-4b0b-9a53-9e16a1b010a7",
+        "SaaSApiConfiguration__SaaSAppUrl": "",
+        "SaaSApiConfiguration__SignedOutRedirectUri": "[concat('https://', variables('adminPortalAppName'), '.azurewebsites.net/Home/Index')]",
+        "KnownUsers": "[parameters('PublisherAdminUsers')]",
+        "WEBSITE_HTTPLOGGING_RETENTION_DAYS": "1",
+        "WEBSITE_RUN_FROM_PACKAGE": "[variables('adminSitePackagePath')]"
+      },
+      "dependsOn": [ 
+        "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('aadApplicationSecretName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('defaultConnectionSecretName'))]"
+        ]
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "name": "[concat(variables('customerPortalAppName'), '/connectionstrings')]",
+      "apiVersion": "2018-11-01",
+      "properties": {
+        "DefaultConnection": 
+          {
+            "value": "[variables('defaultConnectionSetting')]",
+            "type": "SQLServer"
+          }
+      },
+      "dependsOn": [ 
+        "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('aadApplicationSecretName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('defaultConnectionSecretName'))]"
+        ]
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "name": "[concat(variables('adminPortalAppName'), '/connectionstrings')]",
+      "apiVersion": "2018-11-01",
+      "properties": {
+        "DefaultConnection": 
+          {
+            "value": "[variables('defaultConnectionSetting')]",
+            "type": "SQLServer"
+          }
+      },
+      "dependsOn": [ 
+        "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('aadApplicationSecretName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('defaultConnectionSecretName'))]"
+        ]
     }
   ],
   "outputs": {
