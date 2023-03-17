@@ -98,7 +98,35 @@
             "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
             },
             "visible": true
+          },
+          {
+            "name": "AadSqlAdminUsers",
+            "type": "Microsoft.Common.TextBox",
+            "label": "AAD SQL Admin Users",
+            "placeholder": "",
+            "defaultValue": "",
+            "toolTip": "Use only allowed characters",
+            "constraints": {
+            "required": true,
+            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+            },
+            "visible": true
+          },
+          {
+            "name": "AadAdminObjectId",
+            "type": "Microsoft.Common.TextBox",
+            "label": "AAD SQL Admin Users AadAdminObjectId",
+            "placeholder": "",
+            "defaultValue": "",
+            "toolTip": "User Object ID",
+            "constraints": {
+            "required": true,
+            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+            },
+            "visible": true
           }
+
+
       ],
       "steps": [ ],
       "outputs": {
@@ -107,7 +135,9 @@
           "ADApplicationID": "[steps('basics').ADApplicationID]",
           "ADApplicationSecret": "[steps('basics').ADApplicationSecret]",
           "ADMTApplicationID": "[steps('basics').ADMTApplicationID]",
-          "PublisherAdminUsers": "[steps('basics').PublisherAdminUsers]"
+          "PublisherAdminUsers": "[steps('basics').PublisherAdminUsers]",
+          "AadSqlAdminUsers": "[steps('basics').AadSqlAdminUsers]",
+          "AadAdminObjectId": "[steps('basics').AadAdminObjectId]"
       }
   }
 }
