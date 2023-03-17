@@ -78,8 +78,8 @@
     "defaultConnectionSecret": "[concat('Data Source=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=AMPSaaSDB', ';User Id=', variables('sQLAdminLogin'), '@', variables('sqlServerName'), '.database.windows.net;Password=', variables('sQLAdminLoginPassword'), ';')]",
     "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSite.zip')]",
     "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSite.zip')]",
-    "bacpacUrl": "[uri(deployment().properties.templateLink.uri, 'AMPSaaSDB.bacpac')]"
-     
+    "bacpacUrl": "[uri(deployment().properties.templateLink.uri, 'AMPSaaSDB.bacpac')]",
+    "expDate": "[dateTimeToEpoch(dateTimeAdd(utcNow(), 'P2Y'))]"
   },
   "resources": [
     // Vnet and Subnets
@@ -393,7 +393,11 @@
       "apiVersion": "2021-11-01-preview",
       "name": "[format('{0}/{1}', variables('kvName'), variables('aadApplicationSecretName'))]",
       "properties": {
-        "value": "[parameters('ADApplicationSecret')]"
+        "value": "[parameters('ADApplicationSecret')]",
+        "attributes": {
+           "enabled": true,
+           "exp": "[variables('expDate')]"
+          }
       },
       "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
@@ -404,7 +408,11 @@
       "apiVersion": "2021-11-01-preview",
       "name": "[format('{0}/{1}', variables('kvName'), variables('defaultConnectionSecretName'))]",
       "properties": {
-        "value": "[variables('defaultConnectionSecret')]"
+        "value": "[variables('defaultConnectionSecret')]",
+         "attributes": {
+           "enabled": true,
+           "exp": "[variables('expDate')]"
+          }
       },
       "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
