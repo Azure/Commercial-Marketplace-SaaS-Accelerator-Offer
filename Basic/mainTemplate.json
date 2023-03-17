@@ -56,6 +56,10 @@
         "description": "AAD SQL Admin User Object ID"
       },
       "defaultValue": ""
+    },
+    "expDate": {
+      "type": "int",
+      "defaultValue": "[dateTimeToEpoch(dateTimeAdd(utcNow(), 'P2Y'))]"
     }
   },
   "variables": {
@@ -78,8 +82,7 @@
     "defaultConnectionSecret": "[concat('Data Source=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=AMPSaaSDB', ';User Id=', variables('sQLAdminLogin'), '@', variables('sqlServerName'), '.database.windows.net;Password=', variables('sQLAdminLoginPassword'), ';')]",
     "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSite.zip')]",
     "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSite.zip')]",
-    "bacpacUrl": "[uri(deployment().properties.templateLink.uri, 'AMPSaaSDB.bacpac')]",
-    "expDate": "[dateTimeToEpoch(dateTimeAdd(utcNow(), 'P2Y'))]"
+    "bacpacUrl": "[uri(deployment().properties.templateLink.uri, 'AMPSaaSDB.bacpac')]"
   },
   "resources": [
     // Vnet and Subnets
@@ -396,7 +399,7 @@
         "value": "[parameters('ADApplicationSecret')]",
         "attributes": {
            "enabled": true,
-           "exp": "[variables('expDate')]"
+           "exp": "[parameters('expDate')]"
           }
       },
       "dependsOn": [
@@ -411,7 +414,7 @@
         "value": "[variables('defaultConnectionSecret')]",
          "attributes": {
            "enabled": true,
-           "exp": "[variables('expDate')]"
+           "exp": "[parameters('expDate')]"
           }
       },
       "dependsOn": [
