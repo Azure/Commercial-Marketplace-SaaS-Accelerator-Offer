@@ -60,7 +60,8 @@
     "expDate": {
       "type": "int",
       "defaultValue": "[dateTimeToEpoch(dateTimeAdd(utcNow(), 'P2Y'))]"
-    }
+    }   
+
   },
   "variables": {
     "alwaysOn": true,
@@ -82,7 +83,9 @@
     "defaultConnectionSecret": "[concat('Data Source=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=AMPSaaSDB', ';User Id=', variables('sQLAdminLogin'), '@', variables('sqlServerName'), '.database.windows.net;Password=', variables('sQLAdminLoginPassword'), ';')]",
     "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSite.zip')]",
     "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSite.zip')]",
-    "bacpacUrl": "[uri(deployment().properties.templateLink.uri, 'AMPSaaSDB.bacpac')]"
+    "sqlScriptPath": "[uri(deployment().properties.templateLink.uri, 'script.sql')]",
+    "$fxv#0": "cd /mnt/azscripts/azscriptinput\r\nls\r\nInstall-Module sqlserver -Force\r\nInvoke-Sqlcmd -InputFile /mnt/azscripts/azscriptinput/script.sql -ServerInstance ${Env:sqlserverName} -database ${Env:sqlDBName} -Username ${Env:sqlAdminLogin} -Password ${Env:sqlAdminLoginPassword}"
+    
   },
   "resources": [
     // Vnet and Subnets
@@ -210,7 +213,9 @@
         "ignoreMissingVnetServiceEndpoint": false
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
+        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('sqlDBName'))]",
+        "createSqlSchema"
       ]
     },
     {
@@ -231,25 +236,46 @@
         "maxSizeBytes": 268435456000,
         "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
         "zoneRedundant": false
-      },
-      "resources": [
-        {
-          "name": "Import",
-          "type": "extensions",
-          "apiVersion": "2014-04-01",
-          "dependsOn": [
-            "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('sqlDBName'))]"
-          ],
-          "properties": {
-            "storageKeyType": "SharedAccessKey",
-            "storageKey": "[concat('?','')]",
-            "storageUri": "[variables('bacpacUrl')]",
-            "administratorLogin": "[variables('SQLAdminLogin')]",
-            "administratorLoginPassword": "[variables('SQLAdminLoginPassword')]",
-            "operationMode": "Import"
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2020-10-01",
+      "name": "createSqlSchema",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
+        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('sqlDBName'))]"
+      ],
+      "kind": "AzurePowerShell",
+      "properties": {
+        "azPowerShellVersion": "8.0",
+        "scriptContent": "[variables('$fxv#0')]",
+        "timeout": "PT4H",
+        "cleanupPreference": "OnSuccess",
+        "retentionInterval": "P1D",
+        "supportingScriptUris": [
+          "[variables('sqlScriptPath')]"
+        ],
+        "environmentVariables": [
+          {
+            "name": "sqlserverName",
+            "value": "[concat(variables('sqlServerName'), '.database.windows.net')]"
+          },
+          {
+            "name": "sqlDBName",
+            "value": "[variables('sqlDBName')]"
+          },
+          {
+            "name": "sqlAdminLogin",
+            "value": "[variables('sqlAdminLogin')]"
+          },
+          {
+            "name": "sqlAdminLoginPassword",
+            "secureValue": "[variables('sqlAdminLoginPassword')]"
           }
-        }
-      ]
+        ]
+      }
     },
 
     // App service plan and web apps
