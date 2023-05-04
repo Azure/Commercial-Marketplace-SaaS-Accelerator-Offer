@@ -4,9 +4,9 @@ This project contains artifacts which are used to build SaaS Accelerator Azure A
 
 The SaaS Accelerator Azure Application offer will deploy the SaaS Accelerator which addresses the technical requirements of a SaaS Offer. ISVs can use this to accelerate building their SaaS Offer on the Marketplace. ISVs are responsible for managing the deployed artifacts.
 
-## Basic Deployment Plan Architecture
+## Basic Plan - Deployment Architecture
 
-![Basic Deployment Plan Architecture](./_artifacts/images/basic-plan-deployment-architecture.png)
+![Basic Plan - Deployment Architecture](./_artifacts/images/basic-plan-deployment-architecture.png)
 
 ## Contributing
 
