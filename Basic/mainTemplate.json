@@ -81,14 +81,13 @@
     "aadAppSetting": "[concat('@Microsoft.KeyVault(VaultName=',variables('kvName'), ';SecretName=', variables('aadApplicationSecretName'),')')]",
     "defaultConnectionSetting": "[concat('@Microsoft.KeyVault(VaultName=',variables('kvName'), ';SecretName=', variables('defaultConnectionSecretName'),')')]",
     "defaultConnectionSecret": "[concat('Data Source=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=AMPSaaSDB', ';User Id=', variables('sQLAdminLogin'), '@', variables('sqlServerName'), '.database.windows.net;Password=', variables('sQLAdminLoginPassword'), ';')]",
-    "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSite.zip')]",
-    "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSite.zip')]",
+    "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSitev700.zip')]",
+    "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSitev700.zip')]",
     "sqlScriptPath": "[uri(deployment().properties.templateLink.uri, 'script.sql')]",
     "$fxv#0": "cd /mnt/azscripts/azscriptinput\r\nls\r\nInstall-Module sqlserver -Force\r\nInvoke-Sqlcmd -InputFile /mnt/azscripts/azscriptinput/script.sql -ServerInstance ${Env:sqlserverName} -database ${Env:sqlDBName} -Username ${Env:sqlAdminLogin} -Password ${Env:sqlAdminLoginPassword}"
-    
+
   },
   "resources": [
-    // Vnet and Subnets
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2022-07-01",
@@ -158,7 +157,6 @@
         "enableDdosProtection": false
       }
     },
-    // SQL Server and DB
     {
       "type": "Microsoft.Sql/servers",
       "apiVersion": "2015-05-01-preview",
@@ -277,8 +275,6 @@
         ]
       }
     },
-
-    // App service plan and web apps
     {
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2019-08-01",
@@ -367,7 +363,6 @@
         }
       }
     },
-    // Key Vault and Secrets
     {
       "type": "Microsoft.KeyVault/vaults",
       "apiVersion": "2021-11-01-preview",
@@ -447,7 +442,6 @@
         "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
       ]
     },
-    // App configuration
     {
       "type": "Microsoft.Web/sites/config",
       "name": "[concat(variables('customerPortalAppName'), '/appsettings')]",
@@ -531,13 +525,37 @@
     }
   ],
   "outputs": {
-    "CustomerPortal": {
+    "AddTo_MTAppReg_RedirectURL_For_CustomerPortal1": {
       "type": "string",
-      "value": "[reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0]]"
+      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0])]"
     },
-    "PublisherPortal": {
+    "AddTo_MTAppReg_RedirectURL_For_CustomerPortal2": {
       "type": "string",
-      "value": "[reference(concat('Microsoft.Web/sites/', variables('adminPortalAppName'))).hostnames[0]]"
+      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0],'/Home/Index')]"
+    },
+    "AddTo_MTAppReg_RedirectURL_For_AdminPortal1": {
+      "type": "string",
+      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('adminPortalAppName'))).hostnames[0])]"
+    },
+    "AddTo_MTAppReg_RedirectURL_For_AdminPortal2": {
+      "type": "string",
+      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('adminPortalAppName'))).hostnames[0],'/Home/Index')]"
+    },
+    "AddTo_SaaSOffer_TechConfig_LandingPageURL": {
+      "type": "string",
+      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0])]"
+    },
+    "AddTo_SaaSOffer_TechConfig_Webhook": {
+      "type": "string",
+      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0],'/api/AzureWebhook')]"
+    },
+    "AddTo_SaaSOffer_TechConfig_TenantId": {
+      "type": "string",
+      "value": "[parameters('TenantID')]"
+    },
+    "AddTo_SaaSOffer_TechConfig_ApplicationId": {
+      "type": "string",
+      "value": "[parameters('ADApplicationID')]"
     }
   }
 }

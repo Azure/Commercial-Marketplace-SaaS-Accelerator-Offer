@@ -9,9 +9,9 @@
             "type": "Microsoft.Common.InfoBox",
             "visible": true,
             "options": {
-                "icon": "Warning",
-                "text": "Create two App Registrations(1.Single Tenant and 2.MultiTenant) and provide their information in the below respective fields. Once the deployment is complete, you will see URL's in the output which needs to be added to the Redirect URI of your MultiTenant App Registration. Click on this box to watch/learn more about deploying this offer.",
-                "uri": "https://www.microsoft.com"
+              "icon": "Warning",
+              "text": "Create two App Registrations(1.Single Tenant and 2.MultiTenant) and provide their information in the below respective fields. Once the deployment is complete, you will see URL's in the output which needs to be added to the Redirect URI of your MultiTenant App Registration. Click on this box to watch/learn more about deploying this offer.",
+              "uri": "https://microsoft.github.io/Mastering-the-Marketplace/saas/tech-topics/#azure-ad-application-registrations"
             }
           },
           {
