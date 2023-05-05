@@ -34,7 +34,7 @@
           "constraints": {
             "required": true,
             "regex": "^[a-z0-9A-Z-]{1,50}$",
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
           },
           "visible": true
         },
@@ -46,7 +46,7 @@
           "constraints": {
             "required": true,
             "regex": "^[a-z0-9A-Z-]{1,50}$",
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
           },
           "visible": true
         },
@@ -61,7 +61,6 @@
           "constraints": {
             "required": true
           },
-          "options": {},
           "visible": true
         },
           {
@@ -72,7 +71,7 @@
             "constraints": {
             "required": true,
             "regex": "^[a-z0-9A-Z-]{1,50}$",
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
             },
             "visible": true
           },
@@ -82,8 +81,9 @@
             "label": "Publisher Admin Users",
             "toolTip": "This will be the Admin users of the Admin webapp as this is only for the publisher to manage the SaaS Offer. You can always add more people from the Admin portal UI",
             "constraints": {
-            "required": true,
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+              "regex": "^[a-z0-9A-Z-,@. ]{1,50}$",
+              "required": true,
+              "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
             },
             "visible": true
           },
@@ -93,8 +93,9 @@
             "label": "AAD SQL Admin Users",
             "toolTip": "The admin user Azure AD account for the SQL: server",
             "constraints": {
-            "required": true,
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+              "regex": "^[a-z0-9A-Z-,@.]{1,50}$",
+              "required": true,
+              "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
             },
             "visible": true
           },
@@ -104,16 +105,16 @@
             "label": "AAD SQL Admin Users AadAdminObjectId",
             "toolTip": "User Object ID which you can get from your Azure AD",
             "constraints": {
-            "required": true,
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+              "regex": "^[a-z0-9A-Z-]{1,50}$",
+              "required": true,
+              "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
             },
             "visible": true
           }
-
-
       ],
       "steps": [ { } ],
       "outputs": {
+        "Location": "[location()]",
         "WebAppNamePrefix": "[basics('webAppNamePrefix')]",
         "TenantID": "[basics('TenantID')]",
         "ADApplicationID": "[basics('ADApplicationID')]",

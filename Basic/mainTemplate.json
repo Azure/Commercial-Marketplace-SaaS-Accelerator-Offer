@@ -2,6 +2,12 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "Location": {
+      "type": "string",
+      "metadata": {
+        "description": "Location to create the Azure resources in"
+      }
+    },
     "WebAppNamePrefix": {
       "type": "string",
       "metadata": {
@@ -60,7 +66,7 @@
     "expDate": {
       "type": "int",
       "defaultValue": "[dateTimeToEpoch(dateTimeAdd(utcNow(), 'P2Y'))]"
-    }   
+    }
 
   },
   "variables": {
