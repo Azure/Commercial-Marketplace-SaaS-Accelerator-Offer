@@ -73,10 +73,12 @@
     "alwaysOn": true,
     "skuCode": "B1",
     "location": "[resourceGroup().location]",
+    "AdAuthenticationEndPoint": "[environment().authentication.loginEndpoint]",
     "appServicePlanName": "[concat(parameters('webAppNamePrefix'),'-asp')]",
     "customerPortalAppName": "[concat(parameters('webAppNamePrefix'),'-portal')]",
     "adminPortalAppName": "[concat(parameters('webAppNamePrefix'),'-admin')]",
     "sqlServerName": "[concat(parameters('webAppNamePrefix'),'-sql')]",
+    "sqlServerNameFull": "[concat(parameters('webAppNamePrefix'),'-sql','environment().sqlServerHostname')]",
     "sqlDBName": "AMPSaaSDB",
     "sqlAdminLogin": "[concat('saasdbadmin', substring(uniqueString(resourceGroup().id),0,6))]",
     "sqlAdminLoginPassword": "[parameters('SqlAdminLoginPassword')]",
@@ -86,7 +88,7 @@
     "defaultConnectionSecretName": "DefaultConnection",
     "aadAppSetting": "[concat('@Microsoft.KeyVault(VaultName=',variables('kvName'), ';SecretName=', variables('aadApplicationSecretName'),')')]",
     "defaultConnectionSetting": "[concat('@Microsoft.KeyVault(VaultName=',variables('kvName'), ';SecretName=', variables('defaultConnectionSecretName'),')')]",
-    "defaultConnectionSecret": "[concat('Data Source=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=AMPSaaSDB', ';User Id=', variables('sQLAdminLogin'), '@', variables('sqlServerName'), '.database.windows.net;Password=', variables('sQLAdminLoginPassword'), ';')]",
+    "defaultConnectionSecret": "[concat('Data Source=tcp:', variables('sqlServerNameFull'), ',1433;Initial Catalog=AMPSaaSDB', ';User Id=', variables('sQLAdminLogin'), '@', variables('sqlServerNameFull'), ';Password=', variables('sQLAdminLoginPassword'), ';')]",
     "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSitev700.zip')]",
     "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSitev700.zip')]",
     "sqlScriptPath": "[uri(deployment().properties.templateLink.uri, 'script.sql')]",
@@ -262,7 +264,7 @@
         "environmentVariables": [
           {
             "name": "sqlserverName",
-            "value": "[concat(variables('sqlServerName'), '.database.windows.net')]"
+            "value": "[variables('sqlServerNameFull')]"
           },
           {
             "name": "sqlDBName",
@@ -446,7 +448,7 @@
       "name": "[concat(variables('customerPortalAppName'), '/appsettings')]",
       "apiVersion": "2022-03-01",
       "properties": {
-        "SaaSApiConfiguration__AdAuthenticationEndPoint": "https://login.microsoftonline.com",
+        "SaaSApiConfiguration__AdAuthenticationEndPoint": "[variables('AdAuthenticationEndPoint')]",
         "SaaSApiConfiguration__TenantId": "[parameters('TenantID')]",
         "SaaSApiConfiguration__ClientId": "[parameters('ADApplicationID')]",
         "SaaSApiConfiguration__ClientSecret": "[variables('aadAppSetting')]",
@@ -470,7 +472,7 @@
       "name": "[concat(variables('adminPortalAppName'), '/appsettings')]",
       "apiVersion": "2022-03-01",
       "properties": {
-        "SaaSApiConfiguration__AdAuthenticationEndPoint": "https://login.microsoftonline.com",
+        "SaaSApiConfiguration__AdAuthenticationEndPoint": "[variables('AdAuthenticationEndPoint')]",
         "SaaSApiConfiguration__TenantId": "[parameters('TenantID')]",
         "SaaSApiConfiguration__ClientId": "[parameters('ADApplicationID')]",
         "SaaSApiConfiguration__ClientSecret": "[variables('aadAppSetting')]",
