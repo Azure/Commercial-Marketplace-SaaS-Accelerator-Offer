@@ -76,8 +76,14 @@
     "appServicePlanName": "[concat(parameters('webAppNamePrefix'),'-asp')]",
     "customerPortalAppName": "[concat(parameters('webAppNamePrefix'),'-portal')]",
     "adminPortalAppName": "[concat(parameters('webAppNamePrefix'),'-admin')]",
+    "fulFillmentAPIBaseURL": "https://marketplaceapi.microsoft.com/api",
+    "adminPortalRedirectURI1": "[concat('https://', variables('adminPortalAppName'), '.azurewebsites.net')]",
+    "adminPortalRedirectURI2": "[concat('https://', variables('adminPortalAppName'), '.azurewebsites.net/Home/Index')]",
+    "customerPortalRedirectURI1": "[concat('https://', variables('customerPortalAppName'), '.azurewebsites.net')]",
+    "customerPortalRedirectURI2": "[concat('https://', variables('customerPortalAppName'), '.azurewebsites.net/Home/Index')]",
+    "webhook": "[concat('https://', variables('customerPortalAppName'), '.azurewebsites.net/api/AzureWebhook')]",
     "sqlServerName": "[concat(parameters('webAppNamePrefix'),'-sql')]",
-    "sqlServerNameFull": "[concat(parameters('webAppNamePrefix'),'-sql','environment().sqlServerHostname')]",
+    "sqlServerNameFull": "[concat(parameters('webAppNamePrefix'),'-sql', environment().suffixes.sqlServerHostname)]",
     "sqlDBName": "AMPSaaSDB",
     "sqlAdminLogin": "[concat('saasdbadmin', substring(uniqueString(resourceGroup().id),0,6))]",
     "sqlAdminLoginPassword": "[parameters('SqlAdminLoginPassword')]",
@@ -146,11 +152,9 @@
               "delegations": [
                 {
                   "name": "delegation",
-                  "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/subnets', variables('networkName'), 'web'), '/delegations/delegation')]",
                   "properties": {
                     "serviceName": "Microsoft.Web/serverfarms"
-                  },
-                  "type": "Microsoft.Network/virtualNetworks/subnets/delegations"
+                  }
                 }
               ],
               "privateEndpointNetworkPolicies": "Disabled",
@@ -452,12 +456,12 @@
         "SaaSApiConfiguration__ClientId": "[parameters('ADApplicationID')]",
         "SaaSApiConfiguration__ClientSecret": "[variables('aadAppSetting')]",
         "SaaSApiConfiguration__MTClientId": "[parameters('ADMTApplicationID')]",
-        "SaaSApiConfiguration__FulFillmentAPIBaseURL": "https://marketplaceapi.microsoft.com/api",
+        "SaaSApiConfiguration__FulFillmentAPIBaseURL": "[variables('fulFillmentAPIBaseURL')]",
         "SaaSApiConfiguration__FulFillmentAPIVersion": "2018-08-31",
         "SaaSApiConfiguration__GrantType": "client_credentials",
         "SaaSApiConfiguration__Resource": "20e940b3-4c77-4b0b-9a53-9e16a1b010a7",
         "SaaSApiConfiguration__SaaSAppUrl": "",
-        "SaaSApiConfiguration__SignedOutRedirectUri": "[concat('https://', variables('customerPortalAppName'), '.azurewebsites.net/Home/Index')]",
+        "SaaSApiConfiguration__SignedOutRedirectUri": "[variables('customerPortalRedirectURI2')]",
         "WEBSITE_HTTPLOGGING_RETENTION_DAYS": "1",
         "WEBSITE_RUN_FROM_PACKAGE": "[variables('customerSitePackagePath')]"
       },
@@ -476,12 +480,12 @@
         "SaaSApiConfiguration__ClientId": "[parameters('ADApplicationID')]",
         "SaaSApiConfiguration__ClientSecret": "[variables('aadAppSetting')]",
         "SaaSApiConfiguration__MTClientId": "[parameters('ADMTApplicationID')]",
-        "SaaSApiConfiguration__FulFillmentAPIBaseURL": "https://marketplaceapi.microsoft.com/api",
+        "SaaSApiConfiguration__FulFillmentAPIBaseURL": "[variables('fulFillmentAPIBaseURL')]",
         "SaaSApiConfiguration__FulFillmentAPIVersion": "2018-08-31",
         "SaaSApiConfiguration__GrantType": "client_credentials",
         "SaaSApiConfiguration__Resource": "20e940b3-4c77-4b0b-9a53-9e16a1b010a7",
         "SaaSApiConfiguration__SaaSAppUrl": "",
-        "SaaSApiConfiguration__SignedOutRedirectUri": "[concat('https://', variables('adminPortalAppName'), '.azurewebsites.net/Home/Index')]",
+        "SaaSApiConfiguration__SignedOutRedirectUri": "[variables('adminPortalRedirectURI2')]",
         "KnownUsers": "[parameters('PublisherAdminUsers')]",
         "WEBSITE_HTTPLOGGING_RETENTION_DAYS": "1",
         "WEBSITE_RUN_FROM_PACKAGE": "[variables('adminSitePackagePath')]"
@@ -525,27 +529,27 @@
   "outputs": {
     "AddTo_MTAppReg_RedirectURL_For_CustomerPortal1": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0])]"
+      "value": "[variables('customerPortalRedirectURI1')]"
     },
     "AddTo_MTAppReg_RedirectURL_For_CustomerPortal2": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0],'/Home/Index')]"
+      "value": "[variables('customerPortalRedirectURI2')]"
     },
     "AddTo_MTAppReg_RedirectURL_For_AdminPortal1": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('adminPortalAppName'))).hostnames[0])]"
+      "value": "[variables('adminPortalRedirectURI1')]"
     },
     "AddTo_MTAppReg_RedirectURL_For_AdminPortal2": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('adminPortalAppName'))).hostnames[0],'/Home/Index')]"
+      "value": "[variables('adminPortalRedirectURI2')]"
     },
     "AddTo_SaaSOffer_TechConfig_LandingPageURL": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0])]"
+      "value": "[variables('customerPortalRedirectURI1')]"
     },
     "AddTo_SaaSOffer_TechConfig_Webhook": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0],'/api/AzureWebhook')]"
+      "value": "[variables('webhook')]"
     },
     "AddTo_SaaSOffer_TechConfig_TenantId": {
       "type": "string",
