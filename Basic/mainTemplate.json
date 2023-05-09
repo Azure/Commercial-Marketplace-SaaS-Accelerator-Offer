@@ -321,29 +321,42 @@
       "properties": {
         "name": "[variables('customerPortalAppName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "httpsOnly": true,
-        "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]",
-        "siteConfig": {
-          "metadata": [
-            {
-              "name": "CURRENT_STACK",
-              "value": "dotnetcore"
-            }
-          ],
-          "alwaysOn": "[variables('alwaysOn')]",
-          "ftpsState": "FtpsOnly",
-          "http20Enabled": false,
-          "minTlsVersion": "1.2"
-        }
+        "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]"
       },
       "resources": [
         {
           "apiVersion": "2022-03-01",
           "name": "MSDeploy",
           "type": "Extensions",
-          "dependsOn": [ "[resourceId('Microsoft.Web/sites', variables('customerPortalAppName'))]" ],
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', variables('customerPortalAppName'))]"
+          ],
           "properties": {
             "packageUri": "[variables('customerSitePackagePath')]"
+          }
+        },
+        {
+          "apiVersion": "2022-03-01",
+          "name": "web",
+          "type": "config",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', variables('customerPortalAppName'))]",
+            "[resourceId('Microsoft.Web/Sites/extensions', variables('customerPortalAppName'), 'MSDeploy')]"
+          ],
+          "properties": {
+            "httpsOnly": true,
+            "siteConfig": {
+              "metadata": [
+                {
+                  "name": "CURRENT_STACK",
+                  "value": "dotnetcore"
+                }
+              ],
+              "alwaysOn": "[variables('alwaysOn')]",
+              "ftpsState": "FtpsOnly",
+              "http20Enabled": false,
+              "minTlsVersion": "1.2"
+            }
           }
         }
       ]
@@ -367,20 +380,7 @@
       "properties": {
         "name": "[variables('adminPortalAppName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "httpsOnly": true,
-        "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]",
-        "siteConfig": {
-          "metadata": [
-            {
-              "name": "CURRENT_STACK",
-              "value": "dotnetcore"
-            }
-          ],
-          "alwaysOn": "[variables('alwaysOn')]",
-          "ftpsState": "FtpsOnly",
-          "http20Enabled": false,
-          "minTlsVersion": "1.2"
-        }
+        "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]"
       },
       "resources": [
         {
@@ -390,6 +390,30 @@
           "dependsOn": [ "[resourceId('Microsoft.Web/sites', variables('adminPortalAppName'))]" ],
           "properties": {
             "packageUri": "[variables('adminSitePackagePath')]"
+          }
+        },
+        {
+          "apiVersion": "2022-03-01",
+          "name": "web",
+          "type": "config",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', variables('adminPortalAppName'))]",
+            "[resourceId('Microsoft.Web/Sites/extensions', variables('adminPortalAppName'), 'MSDeploy')]"
+          ],
+          "properties": {
+            "httpsOnly": true,
+            "siteConfig": {
+              "metadata": [
+                {
+                  "name": "CURRENT_STACK",
+                  "value": "dotnetcore"
+                }
+              ],
+              "alwaysOn": "[variables('alwaysOn')]",
+              "ftpsState": "FtpsOnly",
+              "http20Enabled": false,
+              "minTlsVersion": "1.2"
+            }
           }
         }
       ]
@@ -511,6 +535,7 @@
         "SaaSApiConfiguration__Resource": "20e940b3-4c77-4b0b-9a53-9e16a1b010a7",
         "SaaSApiConfiguration__SaaSAppUrl": "",
         "SaaSApiConfiguration__SignedOutRedirectUri": "[variables('adminPortalRedirectURI2')]",
+        "SaaSApiConfiguration__SupportmeteredBilling": "false",
         "KnownUsers": "[parameters('PublisherAdminUsers')]",
         "WEBSITE_HTTPLOGGING_RETENTION_DAYS": "1"
       },
