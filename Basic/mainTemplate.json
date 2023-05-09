@@ -425,7 +425,8 @@
       "location": "[parameters('Location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('adminPortalAppName'))]",
-        "[resourceId('Microsoft.Web/sites/extensions', variables('adminPortalAppName'), 'MSDeploy')]"
+        "[resourceId('Microsoft.Web/sites/extensions', variables('adminPortalAppName'), 'MSDeploy')]",
+        "[resourceId('Microsoft.Web/sites/config', variables('adminPortalAppName'), 'web')]"
       ],
       "properties": {
         "enabledForDeployment": false,
