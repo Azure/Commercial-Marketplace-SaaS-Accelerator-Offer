@@ -321,7 +321,22 @@
       "properties": {
         "name": "[variables('customerPortalAppName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]"
+        "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]",
+        "httpsOnly": true,
+        "siteConfig": {
+          "metadata": [
+            {
+              "name": "CURRENT_STACK",
+              "value": "dotnet"
+            }
+          ],
+          "phpVersion": "OFF",
+          "netFrameworkVersion": "v6.0",
+          "alwaysOn": "[variables('alwaysOn')]",
+          "ftpsState": "FtpsOnly",
+          "http20Enabled": false,
+          "minTlsVersion": "1.2"
+        }
       },
       "resources": [
         {
@@ -333,30 +348,6 @@
           ],
           "properties": {
             "packageUri": "[variables('customerSitePackagePath')]"
-          }
-        },
-        {
-          "apiVersion": "2022-03-01",
-          "name": "web",
-          "type": "config",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', variables('customerPortalAppName'))]",
-            "[resourceId('Microsoft.Web/Sites/extensions', variables('customerPortalAppName'), 'MSDeploy')]"
-          ],
-          "properties": {
-            "httpsOnly": true,
-            "siteConfig": {
-              "metadata": [
-                {
-                  "name": "CURRENT_STACK",
-                  "value": "dotnetcore"
-                }
-              ],
-              "alwaysOn": "[variables('alwaysOn')]",
-              "ftpsState": "FtpsOnly",
-              "http20Enabled": false,
-              "minTlsVersion": "1.2"
-            }
           }
         }
       ]
@@ -380,7 +371,22 @@
       "properties": {
         "name": "[variables('adminPortalAppName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]"
+        "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]",
+        "httpsOnly": true,
+        "siteConfig": {
+          "metadata": [
+            {
+              "name": "CURRENT_STACK",
+              "value": "dotnet"
+            }
+          ],
+          "phpVersion": "OFF",
+          "netFrameworkVersion": "v6.0",
+          "alwaysOn": "[variables('alwaysOn')]",
+          "ftpsState": "FtpsOnly",
+          "http20Enabled": false,
+          "minTlsVersion": "1.2"
+        }
       },
       "resources": [
         {
@@ -390,30 +396,6 @@
           "dependsOn": [ "[resourceId('Microsoft.Web/sites', variables('adminPortalAppName'))]" ],
           "properties": {
             "packageUri": "[variables('adminSitePackagePath')]"
-          }
-        },
-        {
-          "apiVersion": "2022-03-01",
-          "name": "web",
-          "type": "config",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', variables('adminPortalAppName'))]",
-            "[resourceId('Microsoft.Web/Sites/extensions', variables('adminPortalAppName'), 'MSDeploy')]"
-          ],
-          "properties": {
-            "httpsOnly": true,
-            "siteConfig": {
-              "metadata": [
-                {
-                  "name": "CURRENT_STACK",
-                  "value": "dotnetcore"
-                }
-              ],
-              "alwaysOn": "[variables('alwaysOn')]",
-              "ftpsState": "FtpsOnly",
-              "http20Enabled": false,
-              "minTlsVersion": "1.2"
-            }
           }
         }
       ]
@@ -425,8 +407,7 @@
       "location": "[parameters('Location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('adminPortalAppName'))]",
-        "[resourceId('Microsoft.Web/sites/extensions', variables('adminPortalAppName'), 'MSDeploy')]",
-        "[resourceId('Microsoft.Web/sites/config', variables('adminPortalAppName'), 'web')]"
+        "[resourceId('Microsoft.Web/sites/extensions', variables('adminPortalAppName'), 'MSDeploy')]"
       ],
       "properties": {
         "enabledForDeployment": false,
