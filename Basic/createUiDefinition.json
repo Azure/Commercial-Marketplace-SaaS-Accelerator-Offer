@@ -14,75 +14,64 @@
               "uri": "https://microsoft.github.io/Mastering-the-Marketplace/saas/tech-topics/#azure-ad-application-registrations"
             }
           },
-          {
-            "name": "webAppNamePrefix",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Web App Name Prefix",
-            "placeholder": "",
-            "defaultValue": "",
-            "toolTip": "Use only allowed characters",
-            "constraints": {
+        {
+          "name": "webAppNamePrefix",
+          "type": "Microsoft.Common.TextBox",
+          "label": "Web App Name Prefix",
+          "toolTip": "The resources(Appservices, SQL and etc) created during the deployment will be prefixed by this value.",
+          "constraints": {
             "required": true,
             "regex": "^[a-z0-9A-Z-]{1,30}$",
             "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
-            },
-            "visible": true
           },
-          {
-            "name": "TenantID",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Tenant ID",
-            "placeholder": "",
-            "defaultValue": "",
-            "toolTip": "Use only allowed characters",
-            "constraints": {
+          "visible": true
+        },
+        {
+          "name": "TenantID",
+          "type": "Microsoft.Common.TextBox",
+          "label": "Tenant ID",
+          "toolTip": "Use the tenantId of the App Registration you created for the Single Tenant App Registration. You will also use value in your SaaS Offer technical configuration. Please see outputs for more information.",
+          "constraints": {
             "required": true,
             "regex": "^[a-z0-9A-Z-]{1,50}$",
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
-            },
-            "visible": true
+            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
           },
-          {
-            "name": "ADApplicationID",
-            "type": "Microsoft.Common.TextBox",
-            "label": "SingleTenant AppReg App(client) ID",
-            "placeholder": "",
-            "defaultValue": "",
-            "toolTip": "Use only allowed characters",
-            "constraints": {
+          "visible": true
+        },
+        {
+          "name": "ADApplicationID",
+          "type": "Microsoft.Common.TextBox",
+          "label": "SingleTenant AppReg App(client) ID",
+          "toolTip": "This is the App(client) ID of the Single Tenant App registration. You will also use value in your SaaS Offer technical configuration. Please see outputs for more information.",
+          "constraints": {
             "required": true,
             "regex": "^[a-z0-9A-Z-]{1,50}$",
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
-            },
-            "visible": true
+            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
           },
-          {
-            "name": "ADApplicationSecret",
-            "type": "Microsoft.Common.PasswordBox",
-            "label": {
+          "visible": true
+        },
+        {
+          "name": "ADApplicationSecret",
+          "type": "Microsoft.Common.PasswordBox",
+          "label": {
             "password": "SingleTenant AppReg Secret",
             "confirmPassword": "Confirm password"
-            },
-            "toolTip": "",
-            "constraints": {
-            "required": true
-            },
-            "options": {
-            "hideConfirmation": true
-            },
-            "visible": true
           },
+          "toolTip": "This is the secret created for the above(Single Tenant) App Registration",
+          "constraints": {
+            "required": true
+          },
+          "visible": true
+        },
           {
             "name": "ADMTApplicationID",
             "type": "Microsoft.Common.TextBox",
             "label": "MultiTenant AppReg App(client) ID",
-            "placeholder": "",
-            "defaultValue": "",
-            "toolTip": "Use only allowed characters",
+            "toolTip": "This is the AppId of the MultiTenant App registration which supports the login of the WebApps created as part of this deployment. You will need to update the App Reg Redirect URIs after this deployment is complete. Please see the outpus once the deployment is complete for the Redirect URIs.",
             "constraints": {
             "required": true,
             "regex": "^[a-z0-9A-Z-]{1,50}$",
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
             },
             "visible": true
           },
@@ -90,12 +79,11 @@
             "name": "PublisherAdminUsers",
             "type": "Microsoft.Common.TextBox",
             "label": "Publisher Admin Users",
-            "placeholder": "",
-            "defaultValue": "",
-            "toolTip": "Use only allowed characters",
+            "toolTip": "This will be the Admin users of the Admin webapp as this is only for the publisher to manage the SaaS Offer. You can always add more people from the Admin portal UI",
             "constraints": {
-            "required": true,
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+              "regex": "^[a-z0-9A-Z-,@. ]{1,50}$",
+              "required": true,
+              "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
             },
             "visible": true
           },
@@ -103,12 +91,11 @@
             "name": "AadSqlAdminUsers",
             "type": "Microsoft.Common.TextBox",
             "label": "AAD SQL Admin Users",
-            "placeholder": "",
-            "defaultValue": "",
-            "toolTip": "Use only allowed characters",
+            "toolTip": "The admin user Azure AD account for the SQL: server",
             "constraints": {
-            "required": true,
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+              "regex": "^[a-z0-9A-Z-,@.]{1,50}$",
+              "required": true,
+              "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
             },
             "visible": true
           },
@@ -116,28 +103,26 @@
             "name": "AadAdminObjectId",
             "type": "Microsoft.Common.TextBox",
             "label": "AAD SQL Admin Users AadAdminObjectId",
-            "placeholder": "",
-            "defaultValue": "",
-            "toolTip": "User Object ID",
+            "toolTip": "User Object ID which you can get from your Azure AD",
             "constraints": {
-            "required": true,
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+              "regex": "^[a-z0-9A-Z-]{1,50}$",
+              "required": true,
+              "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
             },
             "visible": true
           }
-
-
       ],
-      "steps": [ ],
+      "steps": [ { } ],
       "outputs": {
-          "WebAppNamePrefix": "[steps('basics').webAppNamePrefix]",
-          "TenantID": "[steps('basics').TenantID]",
-          "ADApplicationID": "[steps('basics').ADApplicationID]",
-          "ADApplicationSecret": "[steps('basics').ADApplicationSecret]",
-          "ADMTApplicationID": "[steps('basics').ADMTApplicationID]",
-          "PublisherAdminUsers": "[steps('basics').PublisherAdminUsers]",
-          "AadSqlAdminUsers": "[steps('basics').AadSqlAdminUsers]",
-          "AadAdminObjectId": "[steps('basics').AadAdminObjectId]"
+        "Location": "[location()]",
+        "WebAppNamePrefix": "[basics('webAppNamePrefix')]",
+        "TenantID": "[basics('TenantID')]",
+        "ADApplicationID": "[basics('ADApplicationID')]",
+        "ADApplicationSecret": "[basics('ADApplicationSecret')]",
+        "ADMTApplicationID": "[basics('ADMTApplicationID')]",
+        "PublisherAdminUsers": "[basics('PublisherAdminUsers')]",
+        "AadSqlAdminUsers": "[basics('AadSqlAdminUsers')]",
+        "AadAdminObjectId": "[basics('AadAdminObjectId')]"
       }
   }
 }

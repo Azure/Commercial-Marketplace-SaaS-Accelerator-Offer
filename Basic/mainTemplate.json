@@ -2,6 +2,12 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "Location": {
+      "type": "string",
+      "metadata": {
+        "description": "Location to create the Azure resources in"
+      }
+    },
     "WebAppNamePrefix": {
       "type": "string",
       "metadata": {
@@ -33,7 +39,7 @@
       }
     },
     "SqlAdminLoginPassword": {
-      "type": "string",
+      "type": "securestring",
       "defaultValue": "[newGuid()]"
     },
     "PublisherAdminUsers": {
@@ -60,17 +66,24 @@
     "expDate": {
       "type": "int",
       "defaultValue": "[dateTimeToEpoch(dateTimeAdd(utcNow(), 'P2Y'))]"
-    }   
+    }
 
   },
   "variables": {
     "alwaysOn": true,
     "skuCode": "B1",
-    "location": "[resourceGroup().location]",
+    "AdAuthenticationEndPoint": "[environment().authentication.loginEndpoint]",
     "appServicePlanName": "[concat(parameters('webAppNamePrefix'),'-asp')]",
     "customerPortalAppName": "[concat(parameters('webAppNamePrefix'),'-portal')]",
     "adminPortalAppName": "[concat(parameters('webAppNamePrefix'),'-admin')]",
+    "fulFillmentAPIBaseURL": "https://marketplaceapi.microsoft.com/api",
+    "adminPortalRedirectURI1": "[concat('https://', variables('adminPortalAppName'), '.azurewebsites.net')]",
+    "adminPortalRedirectURI2": "[concat('https://', variables('adminPortalAppName'), '.azurewebsites.net/Home/Index')]",
+    "customerPortalRedirectURI1": "[concat('https://', variables('customerPortalAppName'), '.azurewebsites.net')]",
+    "customerPortalRedirectURI2": "[concat('https://', variables('customerPortalAppName'), '.azurewebsites.net/Home/Index')]",
+    "webhook": "[concat('https://', variables('customerPortalAppName'), '.azurewebsites.net/api/AzureWebhook')]",
     "sqlServerName": "[concat(parameters('webAppNamePrefix'),'-sql')]",
+    "sqlServerNameFull": "[concat(parameters('webAppNamePrefix'),'-sql', environment().suffixes.sqlServerHostname)]",
     "sqlDBName": "AMPSaaSDB",
     "sqlAdminLogin": "[concat('saasdbadmin', substring(uniqueString(resourceGroup().id),0,6))]",
     "sqlAdminLoginPassword": "[parameters('SqlAdminLoginPassword')]",
@@ -80,9 +93,9 @@
     "defaultConnectionSecretName": "DefaultConnection",
     "aadAppSetting": "[concat('@Microsoft.KeyVault(VaultName=',variables('kvName'), ';SecretName=', variables('aadApplicationSecretName'),')')]",
     "defaultConnectionSetting": "[concat('@Microsoft.KeyVault(VaultName=',variables('kvName'), ';SecretName=', variables('defaultConnectionSecretName'),')')]",
-    "defaultConnectionSecret": "[concat('Data Source=tcp:', variables('sqlServerName'), '.database.windows.net,1433;Initial Catalog=AMPSaaSDB', ';User Id=', variables('sQLAdminLogin'), '@', variables('sqlServerName'), '.database.windows.net;Password=', variables('sQLAdminLoginPassword'), ';')]",
-    "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSitev700.zip')]",
-    "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSitev700.zip')]",
+    "defaultConnectionSecret": "[concat('Data Source=tcp:', variables('sqlServerNameFull'), ',1433;Initial Catalog=AMPSaaSDB', ';User Id=', variables('sQLAdminLogin'), '@', variables('sqlServerNameFull'), ';Password=', variables('sQLAdminLoginPassword'), ';')]",
+    "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSitev710.zip')]",
+    "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSitev710.zip')]",
     "sqlScriptPath": "[uri(deployment().properties.templateLink.uri, 'script.sql')]",
     "$fxv#0": "cd /mnt/azscripts/azscriptinput\r\nls\r\nInstall-Module sqlserver -Force\r\nInvoke-Sqlcmd -InputFile /mnt/azscripts/azscriptinput/script.sql -ServerInstance ${Env:sqlserverName} -database ${Env:sqlDBName} -Username ${Env:sqlAdminLogin} -Password ${Env:sqlAdminLoginPassword}"
 
@@ -92,7 +105,7 @@
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2022-07-01",
       "name": "[variables('networkName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('Location')]",
       "dependsOn": [],
       "properties": {
         "addressSpace": {
@@ -106,7 +119,6 @@
             "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('networkName'), 'default')]",
             "properties": {
               "addressPrefix": "10.0.0.0/24",
-              "delegations": [],
               "privateEndpointNetworkPolicies": "Disabled",
               "privateLinkServiceNetworkPolicies": "Enabled"
             },
@@ -140,11 +152,9 @@
               "delegations": [
                 {
                   "name": "delegation",
-                  "id": "[concat(resourceId('Microsoft.Network/virtualNetworks/subnets', variables('networkName'), 'web'), '/delegations/delegation')]",
                   "properties": {
                     "serviceName": "Microsoft.Web/serverfarms"
-                  },
-                  "type": "Microsoft.Network/virtualNetworks/subnets/delegations"
+                  }
                 }
               ],
               "privateEndpointNetworkPolicies": "Disabled",
@@ -153,15 +163,14 @@
             "type": "Microsoft.Network/virtualNetworks/subnets"
           }
         ],
-        "virtualNetworkPeerings": [],
         "enableDdosProtection": false
       }
     },
     {
       "type": "Microsoft.Sql/servers",
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "2021-11-01",
       "name": "[variables('sqlServerName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('Location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))]"
       ],
@@ -174,8 +183,8 @@
         {
           "type": "firewallrules",
           "name": "AllowAllAzureIps",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "2015-05-01-preview",
+          "location": "[parameters('Location')]",
+          "apiVersion": "2021-11-01",
           "dependsOn": [
             "[variables('sqlServerName')]"
           ],
@@ -192,7 +201,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
       ],
-      "apiVersion": "2019-06-01-preview",
+      "apiVersion": "2021-11-01",
       "properties": {
         "administratorType": "ActiveDirectory",
         "login": "[parameters('AadSqlAdminUsers')]",
@@ -204,7 +213,7 @@
       "comments": "Allowing Access from Web subnet to the SQL Server",
       "type": "Microsoft.Sql/servers/virtualNetworkRules",
       "name": "[concat(variables('sqlServerName'), '/internal')]",
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "2021-11-01",
       "scale": null,
       "properties": {
         "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('networkName'), 'web')]",
@@ -213,14 +222,14 @@
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
         "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('sqlDBName'))]",
-        "createSqlSchema"
+        "[resourceId('Microsoft.Resources/deploymentScripts', 'createSqlSchema')]"
       ]
     },
     {
       "type": "Microsoft.Sql/servers/databases",
-      "apiVersion": "2017-03-01-preview",
+      "apiVersion": "2021-11-01",
       "name": "[concat(string(variables('sqlServerName')), '/', string(variables('sqlDBName')))]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('Location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
       ],
@@ -240,7 +249,7 @@
       "type": "Microsoft.Resources/deploymentScripts",
       "apiVersion": "2020-10-01",
       "name": "createSqlSchema",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('Location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]",
         "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('sqlDBName'))]"
@@ -258,7 +267,7 @@
         "environmentVariables": [
           {
             "name": "sqlserverName",
-            "value": "[concat(variables('sqlServerName'), '.database.windows.net')]"
+            "value": "[variables('sqlServerNameFull')]"
           },
           {
             "name": "sqlDBName",
@@ -277,9 +286,12 @@
     },
     {
       "type": "Microsoft.Web/serverfarms",
-      "apiVersion": "2019-08-01",
+      "apiVersion": "2022-03-01",
       "name": "[variables('appServicePlanName')]",
-      "location": "[variables('location')]",
+      "location": "[parameters('Location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deploymentScripts', 'createSqlSchema')]"
+      ],
       "sku": {
         "name": "[variables('skuCode')]",
         "capacity": "1"
@@ -295,8 +307,8 @@
     {
       "name": "[variables('customerPortalAppName')]",
       "type": "Microsoft.Web/sites",
-      "apiVersion": "2019-08-01",
-      "location": "[variables('location')]",
+      "apiVersion": "2022-03-01",
+      "location": "[parameters('Location')]",
       "identity": {
         "type": "SystemAssigned"
       },
@@ -309,29 +321,42 @@
       "properties": {
         "name": "[variables('customerPortalAppName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "httpsOnly": true,
         "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]",
+        "httpsOnly": true,
         "siteConfig": {
-          "connectionStrings": [],
-          "appSettings": [],
           "metadata": [
             {
               "name": "CURRENT_STACK",
-              "value": "dotnetcore"
+              "value": "dotnet"
             }
           ],
+          "phpVersion": "OFF",
+          "netFrameworkVersion": "v6.0",
           "alwaysOn": "[variables('alwaysOn')]",
           "ftpsState": "FtpsOnly",
           "http20Enabled": false,
           "minTlsVersion": "1.2"
         }
-      }
+      },
+      "resources": [
+        {
+          "apiVersion": "2022-03-01",
+          "name": "MSDeploy",
+          "type": "Extensions",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', variables('customerPortalAppName'))]"
+          ],
+          "properties": {
+            "packageUri": "[variables('customerSitePackagePath')]"
+          }
+        }
+      ]
     },
     {
       "name": "[variables('adminPortalAppName')]",
       "type": "Microsoft.Web/sites",
-      "apiVersion": "2019-08-01",
-      "location": "[variables('location')]",
+      "apiVersion": "2022-03-01",
+      "location": "[parameters('Location')]",
       "identity": {
         "type": "SystemAssigned"
       },
@@ -340,37 +365,49 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "[resourceId('Microsoft.Web/sites', variables('customerPortalAppName'))]"
+        "[resourceId('Microsoft.Web/sites', variables('customerPortalAppName'))]",
+        "[resourceId('Microsoft.Web/sites/extensions', variables('customerPortalAppName'), 'MSDeploy')]"
       ],
       "properties": {
         "name": "[variables('adminPortalAppName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-        "httpsOnly": true,
         "virtualNetworkSubnetId": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('networkName'))).subnets[1].id]",
+        "httpsOnly": true,
         "siteConfig": {
-          "connectionStrings": [],
-          "appSettings": [],
           "metadata": [
             {
               "name": "CURRENT_STACK",
-              "value": "dotnetcore"
+              "value": "dotnet"
             }
           ],
+          "phpVersion": "OFF",
+          "netFrameworkVersion": "v6.0",
           "alwaysOn": "[variables('alwaysOn')]",
           "ftpsState": "FtpsOnly",
           "http20Enabled": false,
           "minTlsVersion": "1.2"
         }
-      }
+      },
+      "resources": [
+        {
+          "apiVersion": "2022-03-01",
+          "name": "MSDeploy",
+          "type": "Extensions",
+          "dependsOn": [ "[resourceId('Microsoft.Web/sites', variables('adminPortalAppName'))]" ],
+          "properties": {
+            "packageUri": "[variables('adminSitePackagePath')]"
+          }
+        }
+      ]
     },
     {
       "type": "Microsoft.KeyVault/vaults",
-      "apiVersion": "2021-11-01-preview",
+      "apiVersion": "2022-07-01",
       "name": "[variables('kvName')]",
-      "location": "[variables('location')]",
+      "location": "[parameters('Location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', variables('customerPortalAppName'))]",
-        "[resourceId('Microsoft.Web/sites', variables('adminPortalAppName'))]"
+        "[resourceId('Microsoft.Web/sites', variables('adminPortalAppName'))]",
+        "[resourceId('Microsoft.Web/sites/extensions', variables('adminPortalAppName'), 'MSDeploy')]"
       ],
       "properties": {
         "enabledForDeployment": false,
@@ -381,14 +418,14 @@
         "tenantId": "[subscription().tenantId]",
         "accessPolicies": [
           {
-            "objectId": "[reference(resourceId('Microsoft.Web/sites', variables('customerPortalAppName')), '2018-02-01', 'Full').identity.principalId]",
+            "objectId": "[reference(resourceId('Microsoft.Web/sites', variables('customerPortalAppName')), '2022-03-01', 'Full').identity.principalId]",
             "tenantId": "[subscription().tenantId]",
             "permissions": {
               "secrets": [ "list", "get" ]
             }
           },
           {
-            "objectId": "[reference(resourceId('Microsoft.Web/sites', variables('adminPortalAppName')), '2018-02-01', 'Full').identity.principalId]",
+            "objectId": "[reference(resourceId('Microsoft.Web/sites', variables('adminPortalAppName')), '2022-03-01', 'Full').identity.principalId]",
             "tenantId": "[subscription().tenantId]",
             "permissions": {
               "secrets": [ "list", "get" ]
@@ -402,7 +439,6 @@
         "networkAcls": {
           "bypass": "AzureServices",
           "defaultAction": "Deny",
-          "ipRules": [],
           "virtualNetworkRules": [
             {
               "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('networkName'), 'web')]",
@@ -414,14 +450,14 @@
     },
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
-      "apiVersion": "2021-11-01-preview",
+      "apiVersion": "2022-07-01",
       "name": "[format('{0}/{1}', variables('kvName'), variables('aadApplicationSecretName'))]",
       "properties": {
         "value": "[parameters('ADApplicationSecret')]",
         "attributes": {
-           "enabled": true,
-           "exp": "[parameters('expDate')]"
-          }
+          "enabled": true,
+          "exp": "[parameters('expDate')]"
+        }
       },
       "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
@@ -429,14 +465,14 @@
     },
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
-      "apiVersion": "2021-11-01-preview",
+      "apiVersion": "2022-07-01",
       "name": "[format('{0}/{1}', variables('kvName'), variables('defaultConnectionSecretName'))]",
       "properties": {
         "value": "[variables('defaultConnectionSecret')]",
-         "attributes": {
-           "enabled": true,
-           "exp": "[parameters('expDate')]"
-          }
+        "attributes": {
+          "enabled": true,
+          "exp": "[parameters('expDate')]"
+        }
       },
       "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
@@ -445,109 +481,106 @@
     {
       "type": "Microsoft.Web/sites/config",
       "name": "[concat(variables('customerPortalAppName'), '/appsettings')]",
-      "apiVersion": "2018-11-01",
+      "apiVersion": "2022-03-01",
       "properties": {
-        "SaaSApiConfiguration__AdAuthenticationEndPoint": "https://login.microsoftonline.com",
-      "SaaSApiConfiguration__TenantId": "[parameters('TenantID')]",
-      "SaaSApiConfiguration__ClientId": "[parameters('ADApplicationID')]",
-      "SaaSApiConfiguration__ClientSecret": "[variables('aadAppSetting')]",
-      "SaaSApiConfiguration__MTClientId": "[parameters('ADMTApplicationID')]",
-      "SaaSApiConfiguration__FulFillmentAPIBaseURL": "https://marketplaceapi.microsoft.com/api",
-      "SaaSApiConfiguration__FulFillmentAPIVersion": "2018-08-31",      
-      "SaaSApiConfiguration__GrantType": "client_credentials",
-      "SaaSApiConfiguration__Resource": "20e940b3-4c77-4b0b-9a53-9e16a1b010a7",
-      "SaaSApiConfiguration__SaaSAppUrl": "",
-      "SaaSApiConfiguration__SignedOutRedirectUri": "[concat('https://', variables('customerPortalAppName'), '.azurewebsites.net/Home/Index')]",
-      "WEBSITE_HTTPLOGGING_RETENTION_DAYS": "1",
-      "WEBSITE_RUN_FROM_PACKAGE": "[variables('customerSitePackagePath')]"
-      },
-      "dependsOn": [ 
-        "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('aadApplicationSecretName'))]",
-        "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('defaultConnectionSecretName'))]"
-        ]
-    },
-    {
-      "type": "Microsoft.Web/sites/config",
-      "name": "[concat(variables('adminPortalAppName'), '/appsettings')]",
-      "apiVersion": "2018-11-01",
-      "properties": {
-        "SaaSApiConfiguration__AdAuthenticationEndPoint": "https://login.microsoftonline.com",
+        "SaaSApiConfiguration__AdAuthenticationEndPoint": "[variables('AdAuthenticationEndPoint')]",
         "SaaSApiConfiguration__TenantId": "[parameters('TenantID')]",
         "SaaSApiConfiguration__ClientId": "[parameters('ADApplicationID')]",
         "SaaSApiConfiguration__ClientSecret": "[variables('aadAppSetting')]",
         "SaaSApiConfiguration__MTClientId": "[parameters('ADMTApplicationID')]",
-        "SaaSApiConfiguration__FulFillmentAPIBaseURL": "https://marketplaceapi.microsoft.com/api",
-        "SaaSApiConfiguration__FulFillmentAPIVersion": "2018-08-31",      
+        "SaaSApiConfiguration__FulFillmentAPIBaseURL": "[variables('fulFillmentAPIBaseURL')]",
+        "SaaSApiConfiguration__FulFillmentAPIVersion": "2018-08-31",
         "SaaSApiConfiguration__GrantType": "client_credentials",
         "SaaSApiConfiguration__Resource": "20e940b3-4c77-4b0b-9a53-9e16a1b010a7",
         "SaaSApiConfiguration__SaaSAppUrl": "",
-        "SaaSApiConfiguration__SignedOutRedirectUri": "[concat('https://', variables('adminPortalAppName'), '.azurewebsites.net/Home/Index')]",
-        "KnownUsers": "[parameters('PublisherAdminUsers')]",
-        "WEBSITE_HTTPLOGGING_RETENTION_DAYS": "1",
-        "WEBSITE_RUN_FROM_PACKAGE": "[variables('adminSitePackagePath')]"
+        "SaaSApiConfiguration__SignedOutRedirectUri": "[variables('customerPortalRedirectURI2')]",
+        "WEBSITE_HTTPLOGGING_RETENTION_DAYS": "1"
       },
-      "dependsOn": [ 
+      "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('aadApplicationSecretName'))]",
         "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('defaultConnectionSecretName'))]"
-        ]
+      ]
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "name": "[concat(variables('adminPortalAppName'), '/appsettings')]",
+      "apiVersion": "2022-03-01",
+      "properties": {
+        "SaaSApiConfiguration__AdAuthenticationEndPoint": "[variables('AdAuthenticationEndPoint')]",
+        "SaaSApiConfiguration__TenantId": "[parameters('TenantID')]",
+        "SaaSApiConfiguration__ClientId": "[parameters('ADApplicationID')]",
+        "SaaSApiConfiguration__ClientSecret": "[variables('aadAppSetting')]",
+        "SaaSApiConfiguration__MTClientId": "[parameters('ADMTApplicationID')]",
+        "SaaSApiConfiguration__FulFillmentAPIBaseURL": "[variables('fulFillmentAPIBaseURL')]",
+        "SaaSApiConfiguration__FulFillmentAPIVersion": "2018-08-31",
+        "SaaSApiConfiguration__GrantType": "client_credentials",
+        "SaaSApiConfiguration__Resource": "20e940b3-4c77-4b0b-9a53-9e16a1b010a7",
+        "SaaSApiConfiguration__SaaSAppUrl": "",
+        "SaaSApiConfiguration__SignedOutRedirectUri": "[variables('adminPortalRedirectURI2')]",
+        "SaaSApiConfiguration__SupportmeteredBilling": "false",
+        "KnownUsers": "[parameters('PublisherAdminUsers')]",
+        "WEBSITE_HTTPLOGGING_RETENTION_DAYS": "1"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('aadApplicationSecretName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('defaultConnectionSecretName'))]"
+      ]
     },
     {
       "type": "Microsoft.Web/sites/config",
       "name": "[concat(variables('customerPortalAppName'), '/connectionstrings')]",
-      "apiVersion": "2018-11-01",
+      "apiVersion": "2022-03-01",
       "properties": {
-        "DefaultConnection": 
-          {
-            "value": "[variables('defaultConnectionSetting')]",
-            "type": "SQLServer"
-          }
+        "DefaultConnection": {
+          "value": "[variables('defaultConnectionSetting')]",
+          "type": "SQLServer"
+        }
       },
-      "dependsOn": [ 
+      "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('aadApplicationSecretName'))]",
         "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('defaultConnectionSecretName'))]"
-        ]
+      ]
     },
     {
       "type": "Microsoft.Web/sites/config",
       "name": "[concat(variables('adminPortalAppName'), '/connectionstrings')]",
-      "apiVersion": "2018-11-01",
+      "apiVersion": "2022-03-01",
       "properties": {
-        "DefaultConnection": 
-          {
-            "value": "[variables('defaultConnectionSetting')]",
-            "type": "SQLServer"
-          }
+        "DefaultConnection": {
+          "value": "[variables('defaultConnectionSetting')]",
+          "type": "SQLServer"
+        }
       },
-      "dependsOn": [ 
+      "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('aadApplicationSecretName'))]",
         "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), variables('defaultConnectionSecretName'))]"
-        ]
+      ]
     }
   ],
   "outputs": {
     "AddTo_MTAppReg_RedirectURL_For_CustomerPortal1": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0])]"
+      "value": "[variables('customerPortalRedirectURI1')]"
     },
     "AddTo_MTAppReg_RedirectURL_For_CustomerPortal2": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0],'/Home/Index')]"
+      "value": "[variables('customerPortalRedirectURI2')]"
     },
     "AddTo_MTAppReg_RedirectURL_For_AdminPortal1": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('adminPortalAppName'))).hostnames[0])]"
+      "value": "[variables('adminPortalRedirectURI1')]"
     },
     "AddTo_MTAppReg_RedirectURL_For_AdminPortal2": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('adminPortalAppName'))).hostnames[0],'/Home/Index')]"
+      "value": "[variables('adminPortalRedirectURI2')]"
     },
     "AddTo_SaaSOffer_TechConfig_LandingPageURL": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0])]"
+      "value": "[variables('customerPortalRedirectURI1')]"
     },
     "AddTo_SaaSOffer_TechConfig_Webhook": {
       "type": "string",
-      "value": "[concat('https://',reference(concat('Microsoft.Web/sites/', variables('customerPortalAppName'))).hostnames[0],'/api/AzureWebhook')]"
+      "value": "[variables('webhook')]"
     },
     "AddTo_SaaSOffer_TechConfig_TenantId": {
       "type": "string",
