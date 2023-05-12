@@ -17,7 +17,7 @@
         {
           "name": "webAppNamePrefix",
           "type": "Microsoft.Common.TextBox",
-          "label": "Web App Name Prefix",
+          "label": "Resource Name Prefix",
           "toolTip": "The resources(Appservices, SQL and etc) created during the deployment will be prefixed by this value.",
           "constraints": {
             "required": true,
@@ -30,7 +30,7 @@
           "name": "TenantID",
           "type": "Microsoft.Common.TextBox",
           "label": "Tenant ID",
-          "toolTip": "Use the tenantId of the App Registration you created for the Single Tenant App Registration. You will also use value in your SaaS Offer technical configuration. Please see outputs for more information.",
+          "toolTip": "Use the TenantId of the App Registration you created for the Single Tenant App Registration. You will also use this value in your SaaS Offer technical configuration. Please see Deployment output.",
           "constraints": {
             "required": true,
             "regex": "^[a-z0-9A-Z-]{1,50}$",
@@ -41,8 +41,8 @@
         {
           "name": "ADApplicationID",
           "type": "Microsoft.Common.TextBox",
-          "label": "SingleTenant AppReg App(client) ID",
-          "toolTip": "This is the App(client) ID of the Single Tenant App registration. You will also use value in your SaaS Offer technical configuration. Please see outputs for more information.",
+          "label": "Single Tenant AppReg App(client) ID",
+          "toolTip": "This is the App(client) ID of the Single Tenant App registration. You will also use this value in your SaaS Offer technical configuration. Please see Deployment output.",
           "constraints": {
             "required": true,
             "regex": "^[a-z0-9A-Z-]{1,50}$",
@@ -54,8 +54,8 @@
           "name": "ADApplicationSecret",
           "type": "Microsoft.Common.PasswordBox",
           "label": {
-            "password": "SingleTenant AppReg Secret",
-            "confirmPassword": "Confirm password"
+            "password": "Single Tenant AppReg Secret",
+            "confirmPassword": "Confirm Single Tenant AppReg Secret"
           },
           "toolTip": "This is the secret created for the above(Single Tenant) App Registration",
           "constraints": {
@@ -66,8 +66,8 @@
           {
             "name": "ADMTApplicationID",
             "type": "Microsoft.Common.TextBox",
-            "label": "MultiTenant AppReg App(client) ID",
-            "toolTip": "This is the AppId of the MultiTenant App registration which supports the login of the WebApps created as part of this deployment. You will need to update the App Reg Redirect URIs after this deployment is complete. Please see the outpus once the deployment is complete for the Redirect URIs.",
+            "label": "Multi Tenant AppReg App(client) ID",
+            "toolTip": "This is the AppId of the Multi Tenant App registration which supports the login of the WebApps created as part of this deployment. You will need to update the App Reg Redirect URIs after this deployment is complete. Please see Deployment output for the Redirect URIs.",
             "constraints": {
             "required": true,
             "regex": "^[a-z0-9A-Z-]{1,50}$",
@@ -75,23 +75,23 @@
             },
             "visible": true
           },
-          {
-            "name": "PublisherAdminUsers",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Publisher Admin Users",
-            "toolTip": "This will be the Admin users of the Admin webapp as this is only for the publisher to manage the SaaS Offer. You can always add more people from the Admin portal UI",
-            "constraints": {
-              "regex": "^[a-z0-9A-Z-,@. ]{1,50}$",
-              "required": true,
-              "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
-            },
-            "visible": true
+        {
+          "name": "PublisherAdminUsers",
+          "type": "Microsoft.Common.TextBox",
+          "label": "Publisher Portal Admin User",
+          "toolTip": "This will be the Admin users of the Publisher portal webapp as this is only for the publishers to manage the SaaS Offer. You can always add more Admin users in the Publisher portal UI.",
+          "constraints": {
+            "regex": "^[a-z0-9A-Z-,@. ]{1,50}$",
+            "required": true,
+            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
           },
+          "visible": true
+        },
           {
             "name": "AadSqlAdminUsers",
             "type": "Microsoft.Common.TextBox",
-            "label": "AAD SQL Admin Users",
-            "toolTip": "The admin user Azure AD account for the SQL: server",
+            "label": "Azure AD SQL Admin User",
+            "toolTip": "The admin user Azure AD account for the SQL server",
             "constraints": {
               "regex": "^[a-z0-9A-Z-,@.]{1,50}$",
               "required": true,
@@ -99,18 +99,18 @@
             },
             "visible": true
           },
-          {
-            "name": "AadAdminObjectId",
-            "type": "Microsoft.Common.TextBox",
-            "label": "AAD SQL Admin Users AadAdminObjectId",
-            "toolTip": "User Object ID which you can get from your Azure AD",
-            "constraints": {
-              "regex": "^[a-z0-9A-Z-]{1,50}$",
-              "required": true,
-              "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
-            },
-            "visible": true
-          }
+        {
+          "name": "AadAdminObjectId",
+          "type": "Microsoft.Common.TextBox",
+          "label": "Azure AD SQL Admin User ObjectId",
+          "toolTip": "Go to Azure AD -> Users -> Select the User account that was used as the SQL Admin User above -> Copy the Object ID",
+          "constraints": {
+            "regex": "^[a-z0-9A-Z-]{1,50}$",
+            "required": true,
+            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
+          },
+          "visible": true
+        }
       ],
       "steps": [ { } ],
       "outputs": {
