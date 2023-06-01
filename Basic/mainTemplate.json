@@ -94,8 +94,8 @@
     "aadAppSetting": "[concat('@Microsoft.KeyVault(VaultName=',variables('kvName'), ';SecretName=', variables('aadApplicationSecretName'),')')]",
     "defaultConnectionSetting": "[concat('@Microsoft.KeyVault(VaultName=',variables('kvName'), ';SecretName=', variables('defaultConnectionSecretName'),')')]",
     "defaultConnectionSecret": "[concat('Data Source=tcp:', variables('sqlServerNameFull'), ',1433;Initial Catalog=AMPSaaSDB', ';User Id=', variables('sQLAdminLogin'), '@', variables('sqlServerNameFull'), ';Password=', variables('sQLAdminLoginPassword'), ';')]",
-    "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSitev720.zip')]",
-    "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSitev720.zip')]",
+    "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSitev721.zip')]",
+    "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSitev721.zip')]",
     "sqlScriptPath": "[uri(deployment().properties.templateLink.uri, 'script.sql')]",
     "$fxv#0": "cd /mnt/azscripts/azscriptinput\r\nls\r\nInstall-Module sqlserver -Force\r\nInvoke-Sqlcmd -InputFile /mnt/azscripts/azscriptinput/script.sql -ServerInstance ${Env:sqlserverName} -database ${Env:sqlDBName} -Username ${Env:sqlAdminLogin} -Password ${Env:sqlAdminLoginPassword}"
 
