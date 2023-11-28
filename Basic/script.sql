@@ -749,9 +749,9 @@ BEGIN
     INSERT INTO ValueTypes
         (ValueType,CreateDate,HTMLType)
     VALUES 
-        ('Int','1/5/2023 10:08:47 AM','int'),
-        ('String','1/5/2023 10:08:47 AM','string'),
-        ('Date','1/5/2023 10:08:47 AM','date')
+        ('Int','11/4/2023 10:14:09 PM','int'),
+        ('String','11/4/2023 10:14:09 PM','string'),
+        ('Date','11/4/2023 10:14:09 PM','date')
 
 END;
 GO
@@ -768,9 +768,9 @@ BEGIN
     INSERT INTO Events
     	(EventsName,IsActive,CreateDate)
     VALUES
-        ('Activate',1,'1/5/2023 10:08:47 AM'),
-    	('Unsubscribe',1,'1/5/2023 10:08:47 AM'),
-    	('Pending Activation',1,'1/5/2023 10:08:47 AM')
+        ('Activate',1,'11/4/2023 10:14:09 PM'),
+    	('Unsubscribe',1,'11/4/2023 10:14:09 PM'),
+    	('Pending Activation',1,'11/4/2023 10:14:09 PM')
 
 END;
 GO
@@ -833,7 +833,7 @@ BEGIN
     INSERT INTO EmailTemplate
     	([Status],[Description],[InsertDate],[TemplateBody],[Subject],[IsActive])
     VALUES
-        ('Failed','Failed','1/5/2023 10:08:47 AM', '
+        ('Failed','Failed','11/4/2023 10:14:09 PM', '
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
     <html xmlns="http://www.w3.org/1999/xhtml">
        <head>
@@ -854,7 +854,7 @@ BEGIN
                                <!-- BEGIN HEADER // -->                                  
                                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
                                   <tr>
-                                     <td valign="top" class="headerContent">                                              <img src="https://media-exp1.licdn.com/dms/image/C510BAQHaTIBZfLFCGg/company-logo_200_200/0?e=1592438400&v=beta&t=AHOqaRJR_Thf72VDOKQId2QKdwepIp-sIiSIDtALzhQ" style="max-width: 300px; display: block; margin-left: auto; margin-right: auto; padding-top:10px;padding-bottom:10px;" id="headerImage" />                                          </td>
+                                     <td valign="top" class="headerContent">                                              <img src="https://raw.githubusercontent.com/Azure/Commercial-Marketplace-SaaS-Accelerator/main/src/CustomerSite/wwwroot/contoso-sales.png" style="max-width: 300px; display: block; margin-left: auto; margin-right: auto; padding-top:10px;padding-bottom:10px;" id="headerImage" />                                          </td>
                                   </tr>
                                </table>
                                <!-- // END HEADER -->                              
@@ -895,7 +895,7 @@ BEGIN
           </center>
        </body>
     </html>','Failed',1),
-    	('PendingActivation','Pending Activation','1/5/2023 10:08:47 AM', '
+    	('PendingActivation','Pending Activation','11/4/2023 10:14:09 PM', '
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
     <html xmlns="http://www.w3.org/1999/xhtml">
        <head>
@@ -916,7 +916,7 @@ BEGIN
                                <!-- BEGIN HEADER // -->                                  
                                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
                                   <tr>
-                                     <td valign="top" class="headerContent">                                              <img src="https://media-exp1.licdn.com/dms/image/C510BAQHaTIBZfLFCGg/company-logo_200_200/0?e=1592438400&v=beta&t=AHOqaRJR_Thf72VDOKQId2QKdwepIp-sIiSIDtALzhQ" style="max-width: 300px; display: block; margin-left: auto; margin-right: auto; padding-top:10px;padding-bottom:10px;" id="headerImage" />                                          </td>
+                                     <td valign="top" class="headerContent">                                              <img src="https://raw.githubusercontent.com/Azure/Commercial-Marketplace-SaaS-Accelerator/main/src/CustomerSite/wwwroot/contoso-sales.png" style="max-width: 300px; display: block; margin-left: auto; margin-right: auto; padding-top:10px;padding-bottom:10px;" id="headerImage" />                                          </td>
                                   </tr>
                                </table>
                                <!-- // END HEADER -->                              
@@ -958,7 +958,7 @@ BEGIN
        </body>
     </html>
     ','Pending Activation',1),
-    	('Subscribed','Subscribed','1/5/2023 10:08:47 AM', '
+    	('Subscribed','Subscribed','11/4/2023 10:14:09 PM', '
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
     <html xmlns="http://www.w3.org/1999/xhtml">
        <head>
@@ -979,7 +979,7 @@ BEGIN
                                <!-- BEGIN HEADER // -->                                  
                                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
                                   <tr>
-                                     <td valign="top" class="headerContent">                                              <img src="https://media-exp1.licdn.com/dms/image/C510BAQHaTIBZfLFCGg/company-logo_200_200/0?e=1592438400&v=beta&t=AHOqaRJR_Thf72VDOKQId2QKdwepIp-sIiSIDtALzhQ" style="max-width: 300px; display: block; margin-left: auto; margin-right: auto; padding-top:10px;padding-bottom:10px;" id="headerImage" />                                          </td>
+                                     <td valign="top" class="headerContent">                                              <img src="https://raw.githubusercontent.com/Azure/Commercial-Marketplace-SaaS-Accelerator/main/src/CustomerSite/wwwroot/contoso-sales.png" style="max-width: 300px; display: block; margin-left: auto; margin-right: auto; padding-top:10px;padding-bottom:10px;" id="headerImage" />                                          </td>
                                   </tr>
                                </table>
                                <!-- // END HEADER -->                              
@@ -1021,7 +1021,7 @@ BEGIN
        </body>
     </html>
     ','Subscribed',1),
-    	('Unsubscribed','Unsubscribed','1/5/2023 10:08:47 AM', '
+    	('Unsubscribed','Unsubscribed','11/4/2023 10:14:09 PM', '
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
     <html xmlns="http://www.w3.org/1999/xhtml">
        <head>
@@ -1042,7 +1042,7 @@ BEGIN
                                <!-- BEGIN HEADER // -->                                  
                                <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
                                   <tr>
-                                     <td valign="top" class="headerContent">                                              <img src="https://media-exp1.licdn.com/dms/image/C510BAQHaTIBZfLFCGg/company-logo_200_200/0?e=1592438400&v=beta&t=AHOqaRJR_Thf72VDOKQId2QKdwepIp-sIiSIDtALzhQ" style="max-width: 300px; display: block; margin-left: auto; margin-right: auto; padding-top:10px;padding-bottom:10px;" id="headerImage" />                                          </td>
+                                     <td valign="top" class="headerContent">                                              <img src="https://raw.githubusercontent.com/Azure/Commercial-Marketplace-SaaS-Accelerator/main/src/CustomerSite/wwwroot/contoso-sales.png" style="max-width: 300px; display: block; margin-left: auto; margin-right: auto; padding-top:10px;padding-bottom:10px;" id="headerImage" />                                          </td>
                                   </tr>
                                </table>
                                <!-- // END HEADER -->                              
@@ -1239,6 +1239,101 @@ IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'2022
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
     VALUES (N'20221118211554_Baseline_v6', N'6.0.1');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230726232155_Baseline_v7')
+BEGIN
+
+                        IF NOT EXISTS (SELECT * FROM [dbo].[ApplicationConfiguration] WHERE [Name] = 'WebNotificationUrl')
+                        BEGIN
+                            INSERT [dbo].[ApplicationConfiguration] ( [Name], [Value], [Description]) VALUES ( N'WebNotificationUrl', N'', N'Setting this URL will enable pushing LandingPage/Webhook events to this external URL')
+                        END
+
+                        IF NOT EXISTS (SELECT * FROM [dbo].[ApplicationConfiguration] WHERE [Name] = 'EnablesSuccessfulSchedulerEmail')
+                        BEGIN
+                            INSERT [dbo].[ApplicationConfiguration] ( [Name], [Value], [Description]) VALUES ( N'EnablesSuccessfulSchedulerEmail', N'False', N'This will enable sending email for successful metered usage.')
+                        END
+
+                        IF NOT EXISTS (SELECT * FROM [dbo].[ApplicationConfiguration] WHERE [Name] = 'EnablesFailureSchedulerEmail')
+                        BEGIN
+                            INSERT [dbo].[ApplicationConfiguration] ( [Name], [Value], [Description]) VALUES ( N'EnablesFailureSchedulerEmail', N'False', N'This will enable sending email for failure metered usage.')
+                        END
+
+                        IF NOT EXISTS (SELECT * FROM [dbo].[ApplicationConfiguration] WHERE [Name] = 'EnablesMissingSchedulerEmail')
+                        BEGIN
+                            INSERT [dbo].[ApplicationConfiguration] ( [Name], [Value], [Description]) VALUES ( N'EnablesMissingSchedulerEmail', N'False', N'This will enable sending email for missing metered usage.')
+                        END
+
+                        IF NOT EXISTS (SELECT * FROM [dbo].[ApplicationConfiguration] WHERE [Name] = 'SchedulerEmailTo')
+                        BEGIN
+                            INSERT [dbo].[ApplicationConfiguration] ( [Name], [Value], [Description]) VALUES ( N'SchedulerEmailTo', N'', N'Scheduler email receiver(s) ')
+                        END
+
+                        IF NOT EXISTS (SELECT * FROM [dbo].[EmailTemplate] WHERE [Status] = 'Accepted')
+                        BEGIN
+                            INSERT [dbo].[EmailTemplate] ([Status],[Description],[InsertDate],[TemplateBody],[Subject],[isActive]) VALUES (N'Accepted',N'Accepted',GetDate(),N'<html> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> </head> <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0"> <center> <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable"> <tr><td align="center" valign="top" id="bodyCell"><!-- BEGIN TEMPLATE // --><table border="0" cellpadding="0" cellspacing="0" id="templateContainer"><tr><td align="center" valign="top"><!-- BEGIN BODY // --><table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody"><tr><td valign="top" class="bodyContent"><h2>Subscription ****SubscriptionName****</h2><br><p>The Scheduled Task ****SchedulerTaskName**** was fired <b>Successfully</b></p><p>The following section is the deatil results.</p><hr/><table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody">****ResponseJson**** </table></td></tr></table></td></tr></table><!-- // END BODY --></td></tr> </table> <!-- // END TEMPLATE --> </center> </body> </html>',N'Scheduled SaaS Metered Usage Submitted Successfully!',N'True')
+                        END
+
+                        IF NOT EXISTS (SELECT * FROM [dbo].[EmailTemplate] WHERE [Status] = 'Failure')
+                        BEGIN
+                            INSERT [dbo].[EmailTemplate] ([Status],[Description],[InsertDate],[TemplateBody],[Subject],[isActive]) VALUES (N'Failure',N'Failure',GetDate(),N'<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/></head><body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0"><center><table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable"><tr><td align="center" valign="top" id="bodyCell"><!-- BEGIN TEMPLATE // --><table border="0" cellpadding="0" cellspacing="0" id="templateContainer"> 	<tr><td align="center" valign="top"><!-- BEGIN BODY // -->	<table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody"><tr>	<td valign="top" class="bodyContent"><h2 >Subscription ****SubscriptionName****</h2><br><p>The Scheduled Task ****SchedulerTaskName**** was fired<b> but Failed to Submit Data</b></p><br>Please try again or contact technical support to troubleshoot the issue.<p>The following section is the deatil results.</p><hr/><table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody">****ResponseJson****</table></td></tr></table></td>	</tr></table><!-- // END BODY --></td></tr></table><!-- // END TEMPLATE --></center></body> </html>',N'Scheduled SaaS Metered Usage Failure!',N'True')
+                        END
+
+                        IF NOT EXISTS (SELECT * FROM [dbo].[EmailTemplate] WHERE [Status] = 'Missing')
+                        BEGIN
+                            INSERT [dbo].[EmailTemplate] ([Status],[Description],[InsertDate],[TemplateBody],[Subject],[isActive]) VALUES (N'Missing',N'Missing',GetDate(),N'<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/></head><body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0"><center><table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable"><tr><td align="center" valign="top" id="bodyCell"><!-- BEGIN TEMPLATE // --><table border="0" cellpadding="0" cellspacing="0" id="templateContainer"> 	<tr><td align="center" valign="top"><!-- BEGIN BODY // -->	<table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody"><tr>	<td valign="top" class="bodyContent"><h2 >Subscription ****SubscriptionName****</h2><br><p>The Scheduled Task ****SchedulerTaskName**** was skipped by scheduler engine!</b></p><br>Please try again or contact technical support to troubleshoot the issue.<p>The following section is the deatil results.</p><hr/><table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody">****ResponseJson****</table></td></tr></table></td>	</tr></table><!-- // END BODY --></td></tr></table><!-- // END TEMPLATE --></center></body> </html>',N'Scheduled SaaS Metered Task was Skipped!',N'True')
+                        END
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230726232155_Baseline_v7')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230726232155_Baseline_v7', N'6.0.1');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230912052848_SubscriptionDetails_v740')
+BEGIN
+    ALTER TABLE [Subscriptions] ADD [AmpOfferId] nvarchar(max) NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230912052848_SubscriptionDetails_v740')
+BEGIN
+    ALTER TABLE [Subscriptions] ADD [EndDate] datetime2 NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230912052848_SubscriptionDetails_v740')
+BEGIN
+    ALTER TABLE [Subscriptions] ADD [StartDate] datetime2 NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230912052848_SubscriptionDetails_v740')
+BEGIN
+    ALTER TABLE [Subscriptions] ADD [Term] nvarchar(max) NULL;
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20230912052848_SubscriptionDetails_v740')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20230912052848_SubscriptionDetails_v740', N'6.0.1');
 END;
 GO
 
