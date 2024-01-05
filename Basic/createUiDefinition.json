@@ -4,25 +4,25 @@
   "version": "0.1.2-preview",
   "parameters": {
       "basics": [
-          {
-            "name": "appRegInfoBox",
-            "type": "Microsoft.Common.InfoBox",
-            "visible": true,
-            "options": {
-              "icon": "Warning",
-              "text": "Create two App Registrations(1.Single Tenant and 2.MultiTenant) and provide their information in the below respective fields. Once the deployment is complete, you will see URL's in the output which needs to be added to the Redirect URI of your MultiTenant App Registration. Click on this box to watch/learn more about deploying this offer.",
-              "uri": "https://microsoft.github.io/Mastering-the-Marketplace/saas/tech-topics/#azure-ad-application-registrations"
-            }
-          },
+        {
+          "name": "appRegInfoBox",
+          "type": "Microsoft.Common.InfoBox",
+          "visible": true,
+          "options": {
+            "icon": "Warning",
+            "text": "Create two App Registrations(1.Single Tenant and 2.MultiTenant) and provide their information in the below respective fields. Once the deployment is complete, you will see URL's in the output which needs to be added to the Redirect URI of your MultiTenant App Registration. Click on this box to watch/learn more about deploying this offer.",
+            "uri": "https://microsoft.github.io/Mastering-the-Marketplace/saas/tech-topics/#azure-ad-application-registrations"
+          }
+        },
         {
           "name": "webAppNamePrefix",
           "type": "Microsoft.Common.TextBox",
           "label": "Resource Name Prefix",
-          "toolTip": "The resources(Appservices, SQL and etc) created during the deployment will be prefixed by this value.",
+          "toolTip": "The resources(Appservices, SQL and etc) created during the deployment will be prefixed by this value. The vaule must only start with letter, lowercase, alphanumeric characters with non-consequtive hyphen are allowed, and must be 1-21 characters long.",
           "constraints": {
             "required": true,
-            "regex": "^[a-z0-9A-Z-]{1,30}$",
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+            "regex": "^[a-z][a-z0-9-]{1,20}$",
+            "validationMessage": "The vaule must only start with letter, lowercase, alphanumeric characters with non-consequtive hyphen are allowed, and must be 1-21 characters long."
           },
           "visible": true
         },
@@ -63,18 +63,18 @@
           },
           "visible": true
         },
-          {
-            "name": "ADMTApplicationID",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Multi Tenant AppReg App(client) ID",
-            "toolTip": "This is the AppId of the Multi Tenant App registration which supports the login of the WebApps created as part of this deployment. You will need to update the App Reg Redirect URIs after this deployment is complete. Please see Deployment output for the Redirect URIs.",
-            "constraints": {
-            "required": true,
-            "regex": "^[a-z0-9A-Z-]{1,50}$",
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
-            },
-            "visible": true
+        {
+          "name": "ADMTApplicationID",
+          "type": "Microsoft.Common.TextBox",
+          "label": "Multi Tenant AppReg App(client) ID",
+          "toolTip": "This is the AppId of the Multi Tenant App registration which supports the login of the WebApps created as part of this deployment. You will need to update the App Reg Redirect URIs after this deployment is complete. Please see Deployment output for the Redirect URIs.",
+          "constraints": {
+          "required": true,
+          "regex": "^[a-z0-9A-Z-]{1,50}$",
+          "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
           },
+          "visible": true
+        },
         {
           "name": "PublisherAdminUsers",
           "type": "Microsoft.Common.TextBox",
@@ -87,18 +87,18 @@
           },
           "visible": true
         },
-          {
-            "name": "AadSqlAdminUsers",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Azure AD SQL Admin User",
-            "toolTip": "The admin user Azure AD account for the SQL server",
-            "constraints": {
-              "regex": "^[a-z0-9A-Z-,@.]{1,50}$",
-              "required": true,
-              "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
-            },
-            "visible": true
+        {
+          "name": "AadSqlAdminUsers",
+          "type": "Microsoft.Common.TextBox",
+          "label": "Azure AD SQL Admin User",
+          "toolTip": "The admin user Azure AD account for the SQL server",
+          "constraints": {
+            "regex": "^[a-z0-9A-Z-,@.]{1,50}$",
+            "required": true,
+            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
           },
+          "visible": true
+        },
         {
           "name": "AadAdminObjectId",
           "type": "Microsoft.Common.TextBox",
