@@ -329,13 +329,14 @@
       "resources": [
         {
           "apiVersion": "2022-03-01",
-          "name": "MSDeploy",
+          "name": "onedeploy",
           "type": "Extensions",
           "dependsOn": [
             "[resourceId('Microsoft.Web/Sites', variables('customerPortalAppName'))]"
           ],
           "properties": {
-            "packageUri": "[variables('customerSitePackagePath')]"
+            "packageUri": "[variables('customerSitePackagePath')]",
+            "type": "zip"
           }
         },
         {
@@ -344,21 +345,21 @@
           "type": "config",
           "dependsOn": [
             "[concat('Microsoft.Web/Sites/', variables('customerPortalAppName'))]",
-            "[concat('Microsoft.Web/Sites/', variables('customerPortalAppName'), '/Extensions/MSDeploy')]"
+            "[concat('Microsoft.Web/Sites/', variables('customerPortalAppName'), '/Extensions/onedeploy')]"
           ],
           "properties": {
             "metadata": [
-            {
-              "name": "CURRENT_STACK",
-              "value": "dotnet"
-            }
-          ],
-          "phpVersion": "OFF",
-          "netFrameworkVersion": "v6.0",
-          "alwaysOn": "[variables('alwaysOn')]",
-          "ftpsState": "FtpsOnly",
-          "http20Enabled": false,
-          "minTlsVersion": "1.2"
+              {
+                "name": "CURRENT_STACK",
+                "value": "dotnet"
+              }
+            ],
+            "phpVersion": "OFF",
+            "netFrameworkVersion": "v6.0",
+            "alwaysOn": "[variables('alwaysOn')]",
+            "ftpsState": "FtpsOnly",
+            "http20Enabled": false,
+            "minTlsVersion": "1.2"
           }
         }
       ]
@@ -377,7 +378,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
         "[resourceId('Microsoft.Web/sites', variables('customerPortalAppName'))]",
-        "[resourceId('Microsoft.Web/sites/extensions', variables('customerPortalAppName'), 'MSDeploy')]"
+        "[resourceId('Microsoft.Web/sites/extensions', variables('customerPortalAppName'), 'onedeploy')]"
       ],
       "properties": {
         "name": "[variables('adminPortalAppName')]",
@@ -388,11 +389,12 @@
       "resources": [
         {
           "apiVersion": "2022-03-01",
-          "name": "MSDeploy",
+          "name": "onedeploy",
           "type": "Extensions",
           "dependsOn": [ "[resourceId('Microsoft.Web/sites', variables('adminPortalAppName'))]" ],
           "properties": {
-            "packageUri": "[variables('adminSitePackagePath')]"
+            "packageUri": "[variables('adminSitePackagePath')]",
+            "type": "zip"
           }
         },
         {
@@ -401,21 +403,21 @@
           "type": "config",
           "dependsOn": [
             "[concat('Microsoft.Web/Sites/', variables('adminPortalAppName'))]",
-            "[concat('Microsoft.Web/Sites/', variables('adminPortalAppName'), '/Extensions/MSDeploy')]"
+            "[concat('Microsoft.Web/Sites/', variables('adminPortalAppName'), '/Extensions/onedeploy')]"
           ],
           "properties": {
             "metadata": [
-            {
-              "name": "CURRENT_STACK",
-              "value": "dotnet"
-            }
-          ],
-          "phpVersion": "OFF",
-          "netFrameworkVersion": "v6.0",
-          "alwaysOn": "[variables('alwaysOn')]",
-          "ftpsState": "FtpsOnly",
-          "http20Enabled": false,
-          "minTlsVersion": "1.2"
+              {
+                "name": "CURRENT_STACK",
+                "value": "dotnet"
+              }
+            ],
+            "phpVersion": "OFF",
+            "netFrameworkVersion": "v6.0",
+            "alwaysOn": "[variables('alwaysOn')]",
+            "ftpsState": "FtpsOnly",
+            "http20Enabled": false,
+            "minTlsVersion": "1.2"
           }
         }
       ]
@@ -427,7 +429,7 @@
       "location": "[parameters('Location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('adminPortalAppName'))]",
-        "[resourceId('Microsoft.Web/sites/extensions', variables('adminPortalAppName'), 'MSDeploy')]"
+        "[resourceId('Microsoft.Web/sites/extensions', variables('adminPortalAppName'), 'onedeploy')]"
       ],
       "properties": {
         "enabledForDeployment": false,
