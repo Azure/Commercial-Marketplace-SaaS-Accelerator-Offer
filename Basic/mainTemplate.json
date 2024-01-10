@@ -71,7 +71,7 @@
   },
   "variables": {
     "alwaysOn": true,
-    "skuCode": "B1",
+    "skuCode": "S1",
     "AdAuthenticationEndPoint": "[environment().authentication.loginEndpoint]",
     "appServicePlanName": "[concat(parameters('webAppNamePrefix'),'-asp')]",
     "customerPortalAppName": "[concat(parameters('webAppNamePrefix'),'-portal')]",
@@ -94,8 +94,8 @@
     "aadAppSetting": "[concat('@Microsoft.KeyVault(VaultName=',variables('kvName'), ';SecretName=', variables('aadApplicationSecretName'),')')]",
     "defaultConnectionSetting": "[concat('@Microsoft.KeyVault(VaultName=',variables('kvName'), ';SecretName=', variables('defaultConnectionSecretName'),')')]",
     "defaultConnectionSecret": "[concat('Data Source=tcp:', variables('sqlServerNameFull'), ',1433;Initial Catalog=AMPSaaSDB', ';User Id=', variables('sQLAdminLogin'), '@', variables('sqlServerNameFull'), ';Password=', variables('sQLAdminLoginPassword'), ';')]",
-    "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSitev740.zip')]",
-    "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSitev740.zip')]",
+    "customerSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'CustomerSitev751.zip')]",
+    "adminSitePackagePath": "[uri(deployment().properties.templateLink.uri, 'AdminSitev751.zip')]",
     "sqlScriptPath": "[uri(deployment().properties.templateLink.uri, 'script.sql')]",
     "$fxv#0": "cd /mnt/azscripts/azscriptinput\r\nls\r\nInstall-Module sqlserver -Force\r\nInvoke-Sqlcmd -InputFile /mnt/azscripts/azscriptinput/script.sql -ServerInstance ${Env:sqlserverName} -database ${Env:sqlDBName} -Username ${Env:sqlAdminLogin} -Password ${Env:sqlAdminLoginPassword}"
 
@@ -177,7 +177,8 @@
       "properties": {
         "administratorLogin": "[variables('sqlAdminLogin')]",
         "administratorLoginPassword": "[variables('sqlAdminLoginPassword')]",
-        "version": "12.0"
+        "version": "12.0",
+        "minimalTlsVersion": "1.2"
       },
       "resources": [
         {
@@ -536,7 +537,6 @@
         "SaaSApiConfiguration__Resource": "20e940b3-4c77-4b0b-9a53-9e16a1b010a7",
         "SaaSApiConfiguration__SaaSAppUrl": "",
         "SaaSApiConfiguration__SignedOutRedirectUri": "[variables('adminPortalRedirectURI2')]",
-        "SaaSApiConfiguration__SupportmeteredBilling": "false",
         "KnownUsers": "[parameters('PublisherAdminUsers')]",
         "WEBSITE_HTTPLOGGING_RETENTION_DAYS": "1"
       },
