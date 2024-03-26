@@ -27,55 +27,6 @@
           "visible": true
         },
         {
-          "name": "TenantID",
-          "type": "Microsoft.Common.TextBox",
-          "label": "Tenant ID",
-          "toolTip": "Use the TenantId of the App Registration you created for the Single Tenant App Registration. You will also use this value in your SaaS Offer technical configuration. Please see Deployment output.",
-          "constraints": {
-            "required": true,
-            "regex": "^[a-z0-9A-Z-]{1,50}$",
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
-          },
-          "visible": true
-        },
-        {
-          "name": "ADApplicationID",
-          "type": "Microsoft.Common.TextBox",
-          "label": "Single Tenant AppReg App(client) ID",
-          "toolTip": "This is the App(client) ID of the Single Tenant App registration. You will also use this value in your SaaS Offer technical configuration. Please see Deployment output.",
-          "constraints": {
-            "required": true,
-            "regex": "^[a-z0-9A-Z-]{1,50}$",
-            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
-          },
-          "visible": true
-        },
-        {
-          "name": "ADApplicationSecret",
-          "type": "Microsoft.Common.PasswordBox",
-          "label": {
-            "password": "Single Tenant AppReg Secret",
-            "confirmPassword": "Confirm Single Tenant AppReg Secret"
-          },
-          "toolTip": "This is the secret created for the above(Single Tenant) App Registration",
-          "constraints": {
-            "required": true
-          },
-          "visible": true
-        },
-        {
-          "name": "ADMTApplicationID",
-          "type": "Microsoft.Common.TextBox",
-          "label": "Multi Tenant AppReg App(client) ID",
-          "toolTip": "This is the AppId of the Multi Tenant App registration which supports the login of the WebApps created as part of this deployment. You will need to update the App Reg Redirect URIs after this deployment is complete. Please see Deployment output for the Redirect URIs.",
-          "constraints": {
-          "required": true,
-          "regex": "^[a-z0-9A-Z-]{1,50}$",
-          "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-50 characters long."
-          },
-          "visible": true
-        },
-        {
           "name": "PublisherAdminUsers",
           "type": "Microsoft.Common.TextBox",
           "label": "Publisher Portal Admin User",
@@ -112,14 +63,38 @@
           "visible": true
         }
       ],
-      "steps": [ { } ],
+      "steps": [ { 
+			"name": "managedIdentity",
+			"label": "Managed Identity",
+			"elements": [
+				 {
+					"name": "appRegInfoBox",
+					"type": "Microsoft.Common.InfoBox",
+					"visible": true,
+					"options": {
+						"icon": "Warning",
+						"text": "Create a managed identity to that will be used to create necessary Azure Entra Id apps for the SaaS accelerator. In a cloudshell instance run this script:..."
+					}
+				},
+				{
+					"name": "identity",
+					"type": "Microsoft.ManagedIdentity.IdentitySelector",
+					"label": "Managed Identity Configuration",
+					"defaultValue": {
+						"systemAssignedIdentity": "Off"
+					},
+					"options": {
+						"hideSystemAssignedIdentity": true,
+						"hideUserAssignedIdentity": false
+					},
+					"visible": true
+				}
+			]
+	  } ],
       "outputs": {
         "Location": "[location()]",
         "WebAppNamePrefix": "[basics('webAppNamePrefix')]",
-        "TenantID": "[basics('TenantID')]",
-        "ADApplicationID": "[basics('ADApplicationID')]",
-        "ADApplicationSecret": "[basics('ADApplicationSecret')]",
-        "ADMTApplicationID": "[basics('ADMTApplicationID')]",
+		    "Identity": "[steps('managedIdentity').identity]",
         "PublisherAdminUsers": "[basics('PublisherAdminUsers')]",
         "AadSqlAdminUsers": "[basics('AadSqlAdminUsers')]",
         "AadAdminObjectId": "[basics('AadAdminObjectId')]"
