@@ -749,9 +749,9 @@ BEGIN
     INSERT INTO ValueTypes
         (ValueType,CreateDate,HTMLType)
     VALUES 
-        ('Int','1/9/2024 7:19:58 PM','int'),
-        ('String','1/9/2024 7:19:58 PM','string'),
-        ('Date','1/9/2024 7:19:58 PM','date')
+        ('Int','6/4/2024 5:30:58 PM','int'),
+        ('String','6/4/2024 5:30:58 PM','string'),
+        ('Date','6/4/2024 5:30:58 PM','date')
 
 END;
 GO
@@ -768,9 +768,9 @@ BEGIN
     INSERT INTO Events
     	(EventsName,IsActive,CreateDate)
     VALUES
-        ('Activate',1,'1/9/2024 7:19:58 PM'),
-    	('Unsubscribe',1,'1/9/2024 7:19:58 PM'),
-    	('Pending Activation',1,'1/9/2024 7:19:58 PM')
+        ('Activate',1,'6/4/2024 5:30:58 PM'),
+    	('Unsubscribe',1,'6/4/2024 5:30:58 PM'),
+    	('Pending Activation',1,'6/4/2024 5:30:58 PM')
 
 END;
 GO
@@ -833,7 +833,7 @@ BEGIN
     INSERT INTO EmailTemplate
     	([Status],[Description],[InsertDate],[TemplateBody],[Subject],[IsActive])
     VALUES
-        ('Failed','Failed','1/9/2024 7:19:58 PM', '
+        ('Failed','Failed','6/4/2024 5:30:58 PM', '
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
     <html xmlns="http://www.w3.org/1999/xhtml">
        <head>
@@ -895,7 +895,7 @@ BEGIN
           </center>
        </body>
     </html>','Failed',1),
-    	('PendingActivation','Pending Activation','1/9/2024 7:19:58 PM', '
+    	('PendingActivation','Pending Activation','6/4/2024 5:30:58 PM', '
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
     <html xmlns="http://www.w3.org/1999/xhtml">
        <head>
@@ -958,7 +958,7 @@ BEGIN
        </body>
     </html>
     ','Pending Activation',1),
-    	('Subscribed','Subscribed','1/9/2024 7:19:58 PM', '
+    	('Subscribed','Subscribed','6/4/2024 5:30:58 PM', '
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
     <html xmlns="http://www.w3.org/1999/xhtml">
        <head>
@@ -1021,7 +1021,7 @@ BEGIN
        </body>
     </html>
     ','Subscribed',1),
-    	('Unsubscribed','Unsubscribed','1/9/2024 7:19:58 PM', '
+    	('Unsubscribed','Unsubscribed','6/4/2024 5:30:58 PM', '
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
     <html xmlns="http://www.w3.org/1999/xhtml">
        <head>
@@ -1357,6 +1357,29 @@ IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'2023
 BEGIN
     INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
     VALUES (N'20231115232155_Baseline_v741', N'6.0.1');
+END;
+GO
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20240312055030_baseline751')
+BEGIN
+
+                        IF NOT EXISTS (SELECT * FROM [dbo].[ApplicationConfiguration] WHERE [Name] = 'ValidateWebhookJwtToken')
+                        BEGIN
+                            INSERT [dbo].[ApplicationConfiguration] ( [Name], [Value], [Description]) VALUES ( N'ValidateWebhookJwtToken', N'true', N'Validates JWT token when webhook event is recieved.')
+                        END
+END;
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20240312055030_baseline751')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20240312055030_baseline751', N'6.0.1');
 END;
 GO
 
