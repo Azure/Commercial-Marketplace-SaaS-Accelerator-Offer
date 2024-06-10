@@ -28,6 +28,7 @@ az ad app create \
 		--query appId \
 		--output tsv)
 echo $fulfillmentAppId
+az ad sp create --id $fulfillmentAppId
 
 echo "Creating API Fulfilment App Secret..."
 fulfillmentAppSecret=$(\
